@@ -55,6 +55,11 @@ export const authOptions: NextAuthConfig = {
   callbacks: {
     async session({ session, token }: any) {
       try {
+        // If token is null (after signOut), return null session
+        if (!token) {
+          return null as any;
+        }
+        
         if (token && session.user) {
           session.user.id = token.sub || '';
           session.user.role = (token.role as string) || 'user';
@@ -65,12 +70,18 @@ export const authOptions: NextAuthConfig = {
         return session;
       }
     },
-    async jwt({ token, user }: any) {
+    async jwt({ token, user, trigger }: any) {
       try {
+        // If signOut is triggered, return null to invalidate the token
+        if (trigger === 'signOut') {
+          return null;
+        }
+        
         if (user) {
           token.sub = user.id;
           token.role = user.role;
         }
+        
         return token;
       } catch (error) {
         console.error('NextAuth jwt callback error:', error);
@@ -83,10 +94,17 @@ export const authOptions: NextAuthConfig = {
   },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development',
   debug: process.env.NODE_ENV === 'development',
   trustHost: true, // Allow NextAuth to work in development without strict URL checking
+  events: {
+    async signOut() {
+      // Ensure session is cleared on sign out
+      // This is called when signOut is invoked
+    },
+  },
 };
 
 // Export auth function for use in server components
