@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 
-export default function SignInPage() {
+function SignInForm() {
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: '',
@@ -184,5 +187,22 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center p-4 bg-gray-900">
+        <div className="w-full max-w-md">
+          <div className="bg-gray-800 rounded-lg shadow-md p-8 border border-gray-700">
+            <h1 className="text-2xl font-bold text-center mb-6 text-white">Sign In</h1>
+            <p className="text-center text-gray-400">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

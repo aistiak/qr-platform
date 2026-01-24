@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { generateQRCodeDataURL } from '@/lib/qr/generator';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface QRCodeViewerProps {

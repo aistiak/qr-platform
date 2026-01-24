@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server';
 import { requireAdmin, adminForbiddenResponse } from '@/lib/utils/admin-middleware';
-import { unauthorizedResponse, errorResponse, successResponse } from '@/lib/utils/api-response';
+import { errorResponse, successResponse } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
-import HostedImage from '@/lib/models/HostedImage'; // Import to register the model
+// Import HostedImage to register the model for population
+import '@/lib/models/HostedImage';
 
 export async function GET(request: NextRequest) {
   const auth = await requireAdmin(request);

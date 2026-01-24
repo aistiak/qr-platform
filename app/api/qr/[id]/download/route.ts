@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/utils/auth-middleware';
+import { requireAuth, unauthorizedResponse } from '@/lib/utils/auth-middleware';
 import {
-  unauthorizedResponse,
   errorResponse,
   notFoundResponse,
 } from '@/lib/utils/api-response';
@@ -40,7 +39,7 @@ export async function GET(
     // Generate scan URL using the base URL utility
     const scanUrl = getScanUrl(params.id, request);
 
-    const sanitizedName = qrCode.customName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    const sanitizedName = (qrCode.customName || 'qr-code').replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
     if (format === 'svg') {
       // Generate SVG
@@ -63,7 +62,7 @@ export async function GET(
         errorCorrectionLevel: 'H', // High error correction for better scannability
       });
 
-      return new NextResponse(qrBuffer, {
+      return new NextResponse(qrBuffer as any, {
         headers: {
           'Content-Type': 'image/png',
           'Content-Disposition': `attachment; filename="qr-code-${sanitizedName}.png"`,

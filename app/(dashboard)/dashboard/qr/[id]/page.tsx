@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { QRCodeViewer } from '@/components/qr/QRCodeViewer';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import Link from 'next/link';
+import { getScanUrl } from '@/lib/utils/url';
 
 interface QRCode {
   id: string;
@@ -24,7 +25,6 @@ interface QRCode {
 
 export default function QRCodeDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const id = params.id as string;
 
   const [qrCode, setQrCode] = useState<QRCode | null>(null);
@@ -214,7 +214,6 @@ export default function QRCodeDetailPage() {
     );
   }
 
-  const { getScanUrl } = await import('@/lib/utils/url');
   const scanUrl = getScanUrl(id);
 
   return (
@@ -266,7 +265,7 @@ export default function QRCodeDetailPage() {
                         name="targetType"
                         value="url"
                         checked={targetType === 'url'}
-                        onChange={(e) => {
+                        onChange={() => {
                           setTargetType('url');
                           setHostedImageId(null);
                           setSelectedFile(null);
@@ -281,7 +280,7 @@ export default function QRCodeDetailPage() {
                         name="targetType"
                         value="image"
                         checked={targetType === 'image'}
-                        onChange={(e) => {
+                        onChange={() => {
                           setTargetType('image');
                           setTargetUrl('');
                         }}

@@ -82,10 +82,10 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
     }
 
     await onSubmit({
-      customName: customName || undefined,
+      customName: customName.trim() ? customName.trim() : undefined,
       targetType,
       targetUrl: targetType === 'url' ? targetUrl : undefined,
-      hostedImageId: targetType === 'image' ? hostedImageId : undefined,
+      hostedImageId: targetType === 'image' ? (hostedImageId || undefined) : undefined,
     });
   };
 
@@ -113,7 +113,7 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
               name="targetType"
               value="url"
               checked={targetType === 'url'}
-              onChange={(e) => {
+              onChange={() => {
                 setTargetType('url');
                 setHostedImageId(null);
                 setSelectedFile(null);
@@ -128,7 +128,7 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
               name="targetType"
               value="image"
               checked={targetType === 'image'}
-              onChange={(e) => {
+              onChange={() => {
                 setTargetType('image');
                 setTargetUrl('');
               }}

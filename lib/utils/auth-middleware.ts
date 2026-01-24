@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function requireAuth(
-  request: NextRequest
+  _request: NextRequest
 ): Promise<{ user: { id: string; email: string; role: string } } | null> {
   const session = await auth();
 

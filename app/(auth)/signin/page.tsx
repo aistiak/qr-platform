@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
@@ -108,7 +111,7 @@ export default function SignInPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/auth/signup" className="text-blue-600 hover:underline">
               Sign up
             </Link>
@@ -116,5 +119,22 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-md p-8">
+            <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
+            <p className="text-center text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

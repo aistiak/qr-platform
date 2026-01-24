@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAdmin, adminForbiddenResponse } from '@/lib/utils/admin-middleware';
-import { unauthorizedResponse, errorResponse, successResponse } from '@/lib/utils/api-response';
+import { errorResponse, successResponse } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import User from '@/lib/models/User';
 

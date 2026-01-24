@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAdmin, adminForbiddenResponse } from '@/lib/utils/admin-middleware';
 import {
-  unauthorizedResponse,
   errorResponse,
   successResponse,
   notFoundResponse,

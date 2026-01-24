@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth, unauthorizedResponse, forbiddenResponse } from './auth-middleware';
+import { requireAuth } from './auth-middleware';
 
 /**
  * Middleware to require admin role

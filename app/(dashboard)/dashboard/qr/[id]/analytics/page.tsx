@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { AnalyticsChart } from '@/components/qr/AnalyticsChart';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -25,7 +25,6 @@ interface AnalyticsData {
 
 export default function QRCodeAnalyticsPage() {
   const params = useParams();
-  const router = useRouter();
   const id = params.id as string;
 
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);

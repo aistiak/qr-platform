@@ -15,3 +15,7 @@ export function createdResponse<T>(data: T): NextResponse {
 export function notFoundResponse(message: string = 'Resource not found'): NextResponse {
   return errorResponse(message, 404);
 }
+
+export function unauthorizedResponse(): NextResponse {
+  return errorResponse('Unauthorized', 401);
+}

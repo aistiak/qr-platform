@@ -1,10 +1,12 @@
+import type { NextRequest } from 'next/server';
+
 /**
  * Get the base URL for the application
  * Works in both server and client contexts
  */
-export function getBaseUrl(request?: Request): string {
+export function getBaseUrl(request?: NextRequest | Request): string {
   // In server-side API routes, try to get from request headers first
-  if (request) {
+  if (request && 'headers' in request) {
     const host = request.headers.get('host');
     const protocol = request.headers.get('x-forwarded-proto') || 'http';
     if (host) {
@@ -39,7 +41,7 @@ export function getBaseUrl(request?: Request): string {
 /**
  * Generate a scan URL for a QR code
  */
-export function getScanUrl(qrCodeId: string, request?: Request): string {
+export function getScanUrl(qrCodeId: string, request?: NextRequest | Request): string {
   const baseUrl = getBaseUrl(request);
   return `${baseUrl}/api/scan/${qrCodeId}`;
 }
