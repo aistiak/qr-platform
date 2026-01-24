@@ -340,24 +340,31 @@ export default function QRCodeDetailPage() {
                   </Button>
                 </div>
 
-                <div className="space-y-2 text-sm text-gray-300">
-                  <p>
-                    <span className="font-medium text-white">Status:</span>{' '}
-                    <span
-                      className={`px-2 py-1 rounded text-xs ${
-                        qrCode.status === 'active'
-                          ? 'bg-green-900 text-green-300'
-                          : qrCode.status === 'paused'
-                          ? 'bg-yellow-900 text-yellow-300'
-                          : 'bg-gray-700 text-gray-300'
-                      }`}
-                    >
-                      {qrCode.status}
-                    </span>
-                  </p>
-                  <p>
-                    <span className="font-medium text-white">Total Scans:</span> {qrCode.accessCount}
-                  </p>
+                       <div className="space-y-2 text-sm text-gray-300">
+                         <p>
+                           <span className="font-medium text-white">Status:</span>{' '}
+                           <span
+                             className={`px-2 py-1 rounded text-xs ${
+                               qrCode.status === 'active'
+                                 ? 'bg-green-900 text-green-300'
+                                 : qrCode.status === 'paused'
+                                 ? 'bg-yellow-900 text-yellow-300'
+                                 : 'bg-gray-700 text-gray-300'
+                             }`}
+                           >
+                             {qrCode.status}
+                           </span>
+                         </p>
+                         <div className="flex items-center gap-2">
+                           <p>
+                             <span className="font-medium text-white">Total Scans:</span> {qrCode.accessCount}
+                           </p>
+                           <Link href={`/dashboard/qr/${id}/analytics`}>
+                             <Button variant="secondary" size="sm">
+                               View Analytics
+                             </Button>
+                           </Link>
+                         </div>
                   <p>
                     <span className="font-medium text-white">Created:</span>{' '}
                     {new Date(qrCode.createdAt).toLocaleString()}

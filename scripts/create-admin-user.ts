@@ -9,6 +9,14 @@
  *   tsx scripts/create-admin-user.ts --name "Admin User" --email "admin@example.com" --password "securepassword" --limit 100
  */
 
+// Load environment variables from .env.local, .env, etc.
+import dotenv from 'dotenv';
+import { resolve } from 'path';
+
+// Try to load .env.local first, then .env
+dotenv.config({ path: resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: resolve(process.cwd(), '.env') });
+
 import { connectDB } from '../lib/db/mongodb';
 import User from '../lib/models/User';
 import bcrypt from 'bcryptjs';

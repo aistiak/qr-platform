@@ -1,11 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { QRCodeViewer } from './QRCodeViewer';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import {
+  generateShareLink,
+  generateSocialShareUrls,
+  shareContent,
+  copyToClipboard,
+  isWebShareSupported,
+} from '@/lib/utils/share';
 
 interface QRCodeCardProps {
   id: string;
@@ -24,7 +31,7 @@ export function QRCodeCard({
   customName,
   targetType,
   targetUrl,
-  hostedImagePath,
+  hostedImagePath: _hostedImagePath,
   status,
   accessCount,
   createdAt,
@@ -32,6 +39,25 @@ export function QRCodeCard({
 }: QRCodeCardProps) {
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+  const downloadMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close download menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (downloadMenuRef.current && !downloadMenuRef.current.contains(event.target as Node)) {
+        setShowDownloadMenu(false);
+      }
+    }
+
+    if (showDownloadMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showDownloadMenu]);
 
   // Generate scan URL
   const scanUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
@@ -99,9 +125,9 @@ export function QRCodeCard({
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (format: 'png' | 'svg' = 'png') => {
     try {
-      const response = await fetch(`/api/qr/${id}/download`);
+      const response = await fetch(`/api/qr/${id}/download?format=${format}`);
       if (!response.ok) {
         throw new Error('Failed to download QR code');
       }
@@ -110,42 +136,78 @@ export function QRCodeCard({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `qr-code-${customName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+      const extension = format === 'svg' ? 'svg' : 'png';
+      a.download = `qr-code-${customName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${extension}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      setShowDownloadMenu(false);
     } catch (error) {
       console.error('Download error:', error);
       alert('Failed to download QR code');
     }
   };
 
-  const handleShare = async () => {
-    const scanUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
+  const handleShare = async (method?: 'web' | 'twitter' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy') => {
+    const scanUrl = generateShareLink(id);
+    const shareUrls = generateSocialShareUrls(scanUrl, customName, `Check out this QR code: ${customName}`);
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
+    if (!method) {
+      // Try Web Share API first
+      if (isWebShareSupported()) {
+        const shared = await shareContent({
           title: customName,
           text: `Check out this QR code: ${customName}`,
           url: scanUrl,
         });
-      } catch (error) {
-        // User cancelled or error occurred
-        if ((error as Error).name !== 'AbortError') {
-          console.error('Share error:', error);
+        if (shared) {
+          setShowShareModal(false);
+          return;
         }
       }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(scanUrl);
-        alert('QR code URL copied to clipboard!');
-      } catch (error) {
-        console.error('Copy error:', error);
-        alert('Failed to copy QR code URL');
+      // Show share modal if Web Share API not available or failed
+      setShowShareModal(true);
+      return;
+    }
+
+    try {
+      switch (method) {
+        case 'web':
+          await shareContent({
+            title: customName,
+            text: `Check out this QR code: ${customName}`,
+            url: scanUrl,
+          });
+          break;
+        case 'twitter':
+          window.open(shareUrls.twitter, '_blank', 'width=600,height=400');
+          break;
+        case 'facebook':
+          window.open(shareUrls.facebook, '_blank', 'width=600,height=400');
+          break;
+        case 'linkedin':
+          window.open(shareUrls.linkedin, '_blank', 'width=600,height=400');
+          break;
+        case 'whatsapp':
+          window.open(shareUrls.whatsapp, '_blank');
+          break;
+        case 'email':
+          window.location.href = shareUrls.email;
+          break;
+        case 'copy':
+          const copied = await copyToClipboard(scanUrl);
+          if (copied) {
+            alert('QR code URL copied to clipboard!');
+          } else {
+            alert('Failed to copy QR code URL');
+          }
+          break;
       }
+      setShowShareModal(false);
+    } catch (error) {
+      console.error('Share error:', error);
+      alert('Failed to share QR code');
     }
   };
 
@@ -195,20 +257,51 @@ export function QRCodeCard({
                   View Details
                 </Button>
               </Link>
+              <Link href={`/dashboard/qr/${id}/analytics`}>
+                <Button variant="secondary" size="sm">
+                  Analytics
+                </Button>
+              </Link>
               {status !== 'deleted' && (
                 <>
+                  <div className="relative" ref={downloadMenuRef}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+                      disabled={loading}
+                    >
+                      Download
+                    </Button>
+                    {showDownloadMenu && (
+                      <div
+                        className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10 min-w-[120px]"
+                        role="menu"
+                        aria-label="Download format options"
+                      >
+                        <button
+                          onClick={() => handleDownload('png')}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded-t-lg transition-colors"
+                          role="menuitem"
+                          aria-label="Download as PNG"
+                        >
+                          Download PNG
+                        </button>
+                        <button
+                          onClick={() => handleDownload('svg')}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded-b-lg transition-colors"
+                          role="menuitem"
+                          aria-label="Download as SVG"
+                        >
+                          Download SVG
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={handleDownload}
-                    disabled={loading}
-                  >
-                    Download
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleShare}
+                    onClick={() => handleShare()}
                     disabled={loading}
                   >
                     Share
@@ -254,6 +347,77 @@ export function QRCodeCard({
         cancelText="Cancel"
         variant="danger"
       />
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={() => setShowShareModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="share-modal-title"
+        >
+          <div
+            className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="share-modal-title" className="text-xl font-bold mb-4 text-white">
+              Share QR Code
+            </h2>
+            <div className="space-y-2">
+              {isWebShareSupported() && (
+                <button
+                  onClick={() => handleShare('web')}
+                  className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                >
+                  Share via Device
+                </button>
+              )}
+              <button
+                onClick={() => handleShare('copy')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Copy Link
+              </button>
+              <button
+                onClick={() => handleShare('twitter')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Share on Twitter
+              </button>
+              <button
+                onClick={() => handleShare('facebook')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Share on Facebook
+              </button>
+              <button
+                onClick={() => handleShare('linkedin')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Share on LinkedIn
+              </button>
+              <button
+                onClick={() => handleShare('whatsapp')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Share on WhatsApp
+              </button>
+              <button
+                onClick={() => handleShare('email')}
+                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+              >
+                Share via Email
+              </button>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button variant="secondary" onClick={() => setShowShareModal(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

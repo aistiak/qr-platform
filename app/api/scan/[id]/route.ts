@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
+import HostedImage from '@/lib/models/HostedImage'; // Import to register the model
 import QRCodeAccess from '@/lib/models/QRCodeAccess';
 import { notFoundResponse } from '@/lib/utils/api-response';
 

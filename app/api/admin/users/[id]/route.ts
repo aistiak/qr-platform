@@ -8,6 +8,7 @@ import {
 } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import User from '@/lib/models/User';
+import { logger } from '@/lib/utils/logger';
 import { z } from 'zod';
 
 const updateUserSchema = z.object({
@@ -48,6 +49,12 @@ export async function PATCH(
     user.qrCodeLimit = qrCodeLimit;
     await user.save();
 
+    logger.admin('User QR code limit updated', {
+      adminUserId: auth.user.id,
+      targetUserId: user._id.toString(),
+      newLimit: qrCodeLimit,
+    });
+
     return successResponse({
       id: user._id.toString(),
       name: user.name,
@@ -58,7 +65,10 @@ export async function PATCH(
       updatedAt: user.updatedAt,
     });
   } catch (error) {
-    console.error('Update user error:', error);
+    logger.error('Update user error', error, {
+      adminUserId: auth.user.id,
+      targetUserId: params.id,
+    });
     return errorResponse('Failed to update user', 500);
   }
 }

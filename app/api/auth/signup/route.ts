@@ -4,6 +4,7 @@ import User from '@/lib/models/User';
 import bcrypt from 'bcryptjs';
 import { signUpSchema } from '@/lib/utils/validation';
 import { createdResponse, errorResponse } from '@/lib/utils/api-response';
+import { logger } from '@/lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,12 +49,14 @@ export async function POST(request: NextRequest) {
       qrCodeLimit: user.qrCodeLimit,
     };
 
+    logger.auth('User signed up successfully', { userId: user._id.toString(), email: user.email });
+
     return createdResponse({
       user: userResponse,
       message: 'User created successfully',
     });
   } catch (error) {
-    console.error('Sign up error:', error);
+    logger.error('Sign up error', error);
     return errorResponse('Internal server error', 500);
   }
 }

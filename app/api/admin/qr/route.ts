@@ -3,6 +3,7 @@ import { requireAdmin, adminForbiddenResponse } from '@/lib/utils/admin-middlewa
 import { unauthorizedResponse, errorResponse, successResponse } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
+import HostedImage from '@/lib/models/HostedImage'; // Import to register the model
 
 export async function GET(request: NextRequest) {
   const auth = await requireAdmin(request);

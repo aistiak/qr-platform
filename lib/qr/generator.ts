@@ -9,7 +9,7 @@ export interface QRCodeOptions {
 const DEFAULT_OPTIONS: Required<QRCodeOptions> = {
   size: 512,
   margin: 2,
-  errorCorrectionLevel: 'M',
+  errorCorrectionLevel: 'H', // High error correction for better scannability at various sizes
 };
 
 /**

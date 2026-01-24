@@ -65,26 +65,59 @@ export function QRCodeViewer({ data, size = 256, className = '' }: QRCodeViewerP
           <head>
             <title>QR Code - Print</title>
             <style>
+              @media print {
+                @page {
+                  margin: 20mm;
+                  size: A4;
+                }
+                body {
+                  margin: 0;
+                  padding: 0;
+                }
+              }
               body {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
+                min-height: 100vh;
                 margin: 0;
+                padding: 20px;
+                background: white;
+              }
+              .qr-container {
+                text-align: center;
+                page-break-inside: avoid;
               }
               img {
                 max-width: 100%;
                 height: auto;
+                border: 2px solid #000;
+                padding: 20px;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              }
+              @media print {
+                img {
+                  box-shadow: none;
+                  border: 1px solid #000;
+                }
               }
             </style>
           </head>
           <body>
-            <img src="${qrCodeDataUrl}" alt="QR Code" />
+            <div class="qr-container">
+              <img src="${qrCodeDataUrl}" alt="QR Code" />
+            </div>
           </body>
         </html>
       `);
       printWindow.document.close();
-      printWindow.print();
+      // Wait for image to load before printing
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.print();
+        }, 250);
+      };
     }
   };
 
@@ -95,6 +128,8 @@ export function QRCodeViewer({ data, size = 256, className = '' }: QRCodeViewerP
         alt="QR Code"
         className="max-w-full h-auto"
         style={{ width: `${size}px`, height: `${size}px` }}
+        loading="lazy"
+        decoding="async"
       />
       <button
         onClick={handlePrint}

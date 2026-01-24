@@ -9,6 +9,7 @@ import {
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
 import HostedImage from '@/lib/models/HostedImage';
+import { getTotalAccessCount } from '@/lib/utils/analytics';
 import { updateQRCodeSchema } from '@/lib/utils/validation';
 import { validateURL } from '@/lib/qr/validator';
 import { promises as fs } from 'fs';
@@ -39,6 +40,9 @@ export async function GET(
       return notFoundResponse('QR code not found');
     }
 
+    // Compute access count from QRCodeAccess collection
+    const accessCount = await getTotalAccessCount(params.id);
+
     return successResponse({
       id: qrCode._id.toString(),
       customName: qrCode.customName,
@@ -51,7 +55,7 @@ export async function GET(
           }
         : null,
       status: qrCode.status,
-      accessCount: qrCode.accessCount || 0,
+      accessCount,
       createdAt: qrCode.createdAt,
       updatedAt: qrCode.updatedAt,
     });
