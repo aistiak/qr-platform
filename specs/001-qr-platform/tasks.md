@@ -136,8 +136,22 @@
 - [x] T064 [US3] Add edit custom name functionality in QR code detail page
 - [x] T065 [US3] Create archived QR codes section in dashboard with restore functionality
 - [x] T066 [US3] Update QR code status transitions validation in QRCode model
+- [ ] T067 [US3] Update QR code update validation schema in lib/utils/validation.ts to support targetUrl and hostedImageId
+- [ ] T068 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle targetUrl updates with URL validation
+- [ ] T069 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle hostedImageId updates with image validation
+- [ ] T070 [US3] Add logic to regenerate QR code when target URL or image changes in app/api/qr/[id]/route.ts
+- [ ] T071 [US3] Add edit target URL input field to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
+- [ ] T072 [US3] Add edit target image upload functionality to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
+- [ ] T073 [US3] Add target type switching (URL to Image or vice versa) to QR code detail page
+- [ ] T074 [US3] Update QRCodeForm component in components/qr/QRCodeForm.tsx to support edit mode with existing values
+- [ ] T075 [US3] Add validation for target URL format when editing in QR code detail page
+- [ ] T076 [US3] Add validation for image upload when editing target image in QR code detail page
+- [ ] T077 [US3] Update API contract in specs/001-qr-platform/contracts/api.yaml to document targetUrl and hostedImageId in PATCH request
+- [ ] T078 [US3] Handle cleanup of old hosted image when switching from image to URL target type
+- [ ] T079 [US3] Add success feedback when QR code target is updated successfully
+- [ ] T080 [US3] Add error handling for invalid target URL or image upload failures during edit
 
-**Checkpoint**: At this point, User Story 3 should be fully functional. Users can manage their QR codes: rename, pause, resume, archive, restore, and delete.
+**Checkpoint**: At this point, User Story 3 should be fully functional. Users can manage their QR codes: rename, pause, resume, archive, restore, delete, and edit target URLs/images.
 
 ---
 
@@ -149,15 +163,15 @@
 
 ### Implementation for User Story 4
 
-- [ ] T067 [US4] Create QR code download API route in app/api/qr/[id]/download/route.ts with image generation
-- [ ] T068 [US4] Add download button functionality to QRCodeCard component
-- [ ] T069 [US4] Implement print functionality using browser print API in QRCodeViewer component
-- [ ] T070 [US4] Add Web Share API integration for mobile sharing in QRCodeCard component
-- [ ] T071 [US4] Create share link generation utility in lib/utils/share.ts
-- [ ] T072 [US4] Add share button with multiple sharing options (link, image, social) to QRCodeCard
-- [ ] T073 [US4] Ensure QR code images are high quality and scannable at various sizes
-- [ ] T074 [US4] Create print-friendly CSS styles for QR code printing
-- [ ] T075 [US4] Add download format options (PNG, SVG) to download functionality
+- [ ] T081 [US4] Create QR code download API route in app/api/qr/[id]/download/route.ts with image generation
+- [ ] T082 [US4] Add download button functionality to QRCodeCard component
+- [ ] T083 [US4] Implement print functionality using browser print API in QRCodeViewer component
+- [ ] T084 [US4] Add Web Share API integration for mobile sharing in QRCodeCard component
+- [ ] T085 [US4] Create share link generation utility in lib/utils/share.ts
+- [ ] T086 [US4] Add share button with multiple sharing options (link, image, social) to QRCodeCard
+- [ ] T087 [US4] Ensure QR code images are high quality and scannable at various sizes
+- [ ] T088 [US4] Create print-friendly CSS styles for QR code printing
+- [ ] T089 [US4] Add download format options (PNG, SVG) to download functionality
 
 **Checkpoint**: At this point, User Story 4 should be fully functional. Users can download, print, and share their QR codes.
 
@@ -171,17 +185,17 @@
 
 ### Implementation for User Story 5
 
-- [ ] T076 [US5] Update QR code scan handler to record access events in QRCodeAccess collection
-- [ ] T077 [US5] Create analytics aggregation utility in lib/utils/analytics.ts for time-based breakdowns
-- [ ] T078 [US5] Create QR code analytics API route in app/api/qr/[id]/analytics/route.ts with time period filtering
-- [ ] T079 [US5] Create analytics page component in app/(dashboard)/qr/[id]/analytics/page.tsx
-- [ ] T080 [US5] Create AnalyticsChart component in components/qr/AnalyticsChart.tsx for visualizing access data
-- [ ] T081 [US5] Add total access count display to QR code detail page
-- [ ] T082 [US5] Implement daily, weekly, and monthly analytics breakdowns
-- [ ] T083 [US5] Add time period selector (day, week, month) to analytics page
-- [ ] T084 [US5] Create empty state component for QR codes with zero accesses
-- [ ] T085 [US5] Update QRCode model to compute accessCount from QRCodeAccess collection
-- [ ] T086 [US5] Add analytics link/button to QRCodeCard component
+- [ ] T090 [US5] Update QR code scan handler to record access events in QRCodeAccess collection
+- [ ] T091 [US5] Create analytics aggregation utility in lib/utils/analytics.ts for time-based breakdowns
+- [ ] T092 [US5] Create QR code analytics API route in app/api/qr/[id]/analytics/route.ts with time period filtering
+- [ ] T093 [US5] Create analytics page component in app/(dashboard)/qr/[id]/analytics/page.tsx
+- [ ] T094 [US5] Create AnalyticsChart component in components/qr/AnalyticsChart.tsx for visualizing access data
+- [ ] T095 [US5] Add total access count display to QR code detail page
+- [ ] T096 [US5] Implement daily, weekly, and monthly analytics breakdowns
+- [ ] T097 [US5] Add time period selector (day, week, month) to analytics page
+- [ ] T098 [US5] Create empty state component for QR codes with zero accesses
+- [ ] T099 [US5] Update QRCode model to compute accessCount from QRCodeAccess collection
+- [ ] T100 [US5] Add analytics link/button to QRCodeCard component
 
 **Checkpoint**: At this point, User Story 5 should be fully functional. Users can view analytics for their QR codes with time-based breakdowns.
 
@@ -195,19 +209,19 @@
 
 ### Implementation for User Story 6
 
-- [ ] T087 [US6] Create admin middleware utility in lib/utils/admin-middleware.ts to check admin role
-- [ ] T088 [US6] Create admin users list API route in app/api/admin/users/route.ts (GET)
-- [ ] T089 [US6] Create admin user update API route in app/api/admin/users/[id]/route.ts (PATCH) for QR code limit
-- [ ] T090 [US6] Create admin QR codes list API route in app/api/admin/qr/route.ts (GET)
-- [ ] T091 [US6] Create admin dashboard page component in app/(dashboard)/admin/page.tsx
-- [ ] T092 [US6] Create admin users list page component in app/(dashboard)/admin/users/page.tsx
-- [ ] T093 [US6] Create admin user detail/edit page component in app/(dashboard)/admin/users/[id]/page.tsx
-- [ ] T094 [US6] Create UserList component in components/admin/UserList.tsx for displaying all users
-- [ ] T095 [US6] Create UserEditForm component in components/admin/UserEditForm.tsx for editing user QR code limit
-- [ ] T096 [US6] Add admin navigation link to dashboard navigation
-- [ ] T097 [US6] Protect admin routes with admin middleware
-- [ ] T098 [US6] Add user role display and QR code limit editing in admin user detail page
-- [ ] T099 [US6] Create admin QR codes view showing all QR codes with user information
+- [ ] T101 [US6] Create admin middleware utility in lib/utils/admin-middleware.ts to check admin role
+- [ ] T102 [US6] Create admin users list API route in app/api/admin/users/route.ts (GET)
+- [ ] T103 [US6] Create admin user update API route in app/api/admin/users/[id]/route.ts (PATCH) for QR code limit
+- [ ] T104 [US6] Create admin QR codes list API route in app/api/admin/qr/route.ts (GET)
+- [ ] T105 [US6] Create admin dashboard page component in app/(dashboard)/admin/page.tsx
+- [ ] T106 [US6] Create admin users list page component in app/(dashboard)/admin/users/page.tsx
+- [ ] T107 [US6] Create admin user detail/edit page component in app/(dashboard)/admin/users/[id]/page.tsx
+- [ ] T108 [US6] Create UserList component in components/admin/UserList.tsx for displaying all users
+- [ ] T109 [US6] Create UserEditForm component in components/admin/UserEditForm.tsx for editing user QR code limit
+- [ ] T110 [US6] Add admin navigation link to dashboard navigation
+- [ ] T111 [US6] Protect admin routes with admin middleware
+- [ ] T112 [US6] Add user role display and QR code limit editing in admin user detail page
+- [ ] T113 [US6] Create admin QR codes view showing all QR codes with user information
 
 **Checkpoint**: At this point, User Story 6 should be fully functional. Administrators can view all users and QR codes, and modify user QR code limits.
 
@@ -217,23 +231,23 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T100 [P] Create Header component in components/layout/Header.tsx with navigation and user menu
-- [ ] T101 [P] Create Navigation component in components/layout/Navigation.tsx with mobile-responsive menu
-- [ ] T102 [P] Create Footer component in components/layout/Footer.tsx
-- [ ] T103 [P] Add mobile-responsive breakpoints and touch-friendly interactions across all components
-- [ ] T104 [P] Implement loading states and error boundaries throughout the application
-- [ ] T105 [P] Add accessibility attributes (ARIA labels, keyboard navigation) to all interactive elements
-- [ ] T106 [P] Optimize images and implement lazy loading for QR code images
-- [ ] T107 [P] Add performance monitoring and Core Web Vitals tracking
-- [ ] T108 [P] Implement PWA capabilities with service worker and manifest
-- [ ] T109 [P] Add comprehensive error messages and user feedback throughout the application
-- [ ] T110 [P] Create TypeScript types in types/user.ts, types/qrcode.ts, and types/api.ts
-- [ ] T111 [P] Add input validation and sanitization across all forms
-- [ ] T112 [P] Implement rate limiting for API routes
-- [ ] T113 [P] Add logging for critical operations (auth, QR creation, admin actions)
-- [ ] T114 [P] Create database migration script for initial indexes setup
-- [ ] T115 [P] Update README.md with setup and deployment instructions
-- [ ] T116 [P] Run quickstart.md validation and update if needed
+- [ ] T114 [P] Create Header component in components/layout/Header.tsx with navigation and user menu
+- [ ] T115 [P] Create Navigation component in components/layout/Navigation.tsx with mobile-responsive menu
+- [ ] T116 [P] Create Footer component in components/layout/Footer.tsx
+- [ ] T117 [P] Add mobile-responsive breakpoints and touch-friendly interactions across all components
+- [ ] T118 [P] Implement loading states and error boundaries throughout the application
+- [ ] T119 [P] Add accessibility attributes (ARIA labels, keyboard navigation) to all interactive elements
+- [ ] T120 [P] Optimize images and implement lazy loading for QR code images
+- [ ] T121 [P] Add performance monitoring and Core Web Vitals tracking
+- [ ] T122 [P] Implement PWA capabilities with service worker and manifest
+- [ ] T123 [P] Add comprehensive error messages and user feedback throughout the application
+- [ ] T124 [P] Create TypeScript types in types/user.ts, types/qrcode.ts, and types/api.ts
+- [ ] T125 [P] Add input validation and sanitization across all forms
+- [ ] T126 [P] Implement rate limiting for API routes
+- [ ] T127 [P] Add logging for critical operations (auth, QR creation, admin actions)
+- [ ] T128 [P] Create database migration script for initial indexes setup
+- [ ] T129 [P] Update README.md with setup and deployment instructions
+- [ ] T130 [P] Run quickstart.md validation and update if needed
 
 ---
 

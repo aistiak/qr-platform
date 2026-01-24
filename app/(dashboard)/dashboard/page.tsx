@@ -32,7 +32,7 @@ export default async function DashboardPage() {
 
         <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
           <h2 className="text-xl font-semibold mb-4 text-white">Your QR Codes</h2>
-          <QRCodeList status="active" showArchived={true} />
+          <QRCodeList status="all" showArchived={true} />
         </div>
       </div>
     </div>

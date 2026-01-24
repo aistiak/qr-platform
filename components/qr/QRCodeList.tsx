@@ -25,21 +25,19 @@ interface QRCodeListProps {
 
 export function QRCodeList({ status = 'active', showArchived = false }: QRCodeListProps) {
   const [qrCodes, setQrCodes] = useState<QRCode[]>([]);
-  const [archivedQRCodes, setArchivedQRCodes] = useState<QRCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     fetchQRCodes();
-    if (showArchived) {
-      fetchArchivedQRCodes();
-    }
   }, [status, showArchived]);
 
   const fetchQRCodes = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/qr?status=${status}`);
+      // If status is 'all' or showArchived is true, fetch all non-deleted QR codes
+      const fetchStatus = status === 'all' ? 'all' : status;
+      const response = await fetch(`/api/qr?status=${fetchStatus}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -54,25 +52,8 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
     }
   };
 
-  const fetchArchivedQRCodes = async () => {
-    try {
-      const response = await fetch('/api/qr?status=archived');
-      const data = await response.json();
-
-      if (response.ok) {
-        setArchivedQRCodes(data.qrCodes || []);
-      }
-    } catch (err) {
-      // Silently fail for archived codes
-      console.error('Failed to fetch archived QR codes:', err);
-    }
-  };
-
   const handleUpdate = () => {
     fetchQRCodes();
-    if (showArchived) {
-      fetchArchivedQRCodes();
-    }
   };
 
   if (loading) {
@@ -91,7 +72,12 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
     );
   }
 
-  if (qrCodes.length === 0) {
+  // Group QR codes by status
+  const activeQRCodes = qrCodes.filter((qr) => qr.status === 'active');
+  const pausedQRCodes = qrCodes.filter((qr) => qr.status === 'paused');
+  const archivedQRCodes = qrCodes.filter((qr) => qr.status === 'archived');
+
+  if (qrCodes.length === 0 && !loading) {
     return (
       <div className="text-center py-8">
         <p className="text-gray-300 mb-4">No QR codes yet. Create your first QR code to get started.</p>
@@ -104,26 +90,51 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
 
   return (
     <div className="space-y-6">
-      {qrCodes.length > 0 && (
-        <div className="space-y-4">
-          {qrCodes.map((qr) => (
-            <QRCodeCard
-              key={qr.id}
-              id={qr.id}
-              customName={qr.customName}
-              targetType={qr.targetType}
-              targetUrl={qr.targetUrl}
-              hostedImagePath={qr.hostedImageId?.filePath}
-              status={qr.status}
-              accessCount={qr.accessCount}
-              createdAt={qr.createdAt}
-              onUpdate={handleUpdate}
-            />
-          ))}
+      {activeQRCodes.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-white">Active QR Codes</h3>
+          <div className="space-y-4">
+            {activeQRCodes.map((qr) => (
+              <QRCodeCard
+                key={qr.id}
+                id={qr.id}
+                customName={qr.customName}
+                targetType={qr.targetType}
+                targetUrl={qr.targetUrl}
+                hostedImagePath={qr.hostedImageId?.filePath}
+                status={qr.status}
+                accessCount={qr.accessCount}
+                createdAt={qr.createdAt}
+                onUpdate={handleUpdate}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {showArchived && archivedQRCodes.length > 0 && (
+      {pausedQRCodes.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-white">Paused QR Codes</h3>
+          <div className="space-y-4">
+            {pausedQRCodes.map((qr) => (
+              <QRCodeCard
+                key={qr.id}
+                id={qr.id}
+                customName={qr.customName}
+                targetType={qr.targetType}
+                targetUrl={qr.targetUrl}
+                hostedImagePath={qr.hostedImageId?.filePath}
+                status={qr.status}
+                accessCount={qr.accessCount}
+                createdAt={qr.createdAt}
+                onUpdate={handleUpdate}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(showArchived || status === 'all') && archivedQRCodes.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold mb-4 text-white">Archived QR Codes</h3>
           <div className="space-y-4">
