@@ -84,7 +84,7 @@ export default function QRCodeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 p-4 flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -92,7 +92,7 @@ export default function QRCodeDetailPage() {
 
   if (error || !qrCode) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
+      <div className="min-h-screen bg-gray-900 p-4">
         <div className="max-w-4xl mx-auto">
           <Card>
             <ErrorMessage message={error || 'QR code not found'} />
@@ -110,7 +110,7 @@ export default function QRCodeDetailPage() {
   const scanUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-900 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
           <Link href="/dashboard">
@@ -121,7 +121,7 @@ export default function QRCodeDetailPage() {
         </div>
 
         <Card className="mb-6">
-          <h1 className="text-2xl font-bold mb-6">QR Code Details</h1>
+          <h1 className="text-2xl font-bold mb-6 text-white">QR Code Details</h1>
 
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row gap-6">
@@ -130,7 +130,7 @@ export default function QRCodeDetailPage() {
               </div>
               <div className="flex-1 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Custom Name
                   </label>
                   <div className="flex gap-2">
@@ -147,46 +147,46 @@ export default function QRCodeDetailPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-sm text-gray-300">
                   <p>
-                    <span className="font-medium">Type:</span> {qrCode.targetType === 'url' ? 'URL' : 'Image'}
+                    <span className="font-medium text-white">Type:</span> {qrCode.targetType === 'url' ? 'URL' : 'Image'}
                   </p>
                   {qrCode.targetType === 'url' && qrCode.targetUrl && (
                     <p>
-                      <span className="font-medium">Target URL:</span>{' '}
+                      <span className="font-medium text-white">Target URL:</span>{' '}
                       <a
                         href={qrCode.targetUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-400 hover:text-blue-300 hover:underline"
                       >
                         {qrCode.targetUrl}
                       </a>
                     </p>
                   )}
                   <p>
-                    <span className="font-medium">Status:</span>{' '}
+                    <span className="font-medium text-white">Status:</span>{' '}
                     <span
                       className={`px-2 py-1 rounded text-xs ${
                         qrCode.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-900 text-green-300'
                           : qrCode.status === 'paused'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-yellow-900 text-yellow-300'
+                          : 'bg-gray-700 text-gray-300'
                       }`}
                     >
                       {qrCode.status}
                     </span>
                   </p>
                   <p>
-                    <span className="font-medium">Total Scans:</span> {qrCode.accessCount}
+                    <span className="font-medium text-white">Total Scans:</span> {qrCode.accessCount}
                   </p>
                   <p>
-                    <span className="font-medium">Created:</span>{' '}
+                    <span className="font-medium text-white">Created:</span>{' '}
                     {new Date(qrCode.createdAt).toLocaleString()}
                   </p>
                   <p>
-                    <span className="font-medium">Last Updated:</span>{' '}
+                    <span className="font-medium text-white">Last Updated:</span>{' '}
                     {new Date(qrCode.updatedAt).toLocaleString()}
                   </p>
                 </div>

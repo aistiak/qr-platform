@@ -103,11 +103,11 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Target Type
         </label>
         <div className="flex gap-4">
-          <label className="flex items-center">
+          <label className="flex items-center text-gray-300">
             <input
               type="radio"
               name="targetType"
@@ -122,7 +122,7 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
             />
             URL
           </label>
-          <label className="flex items-center">
+          <label className="flex items-center text-gray-300">
             <input
               type="radio"
               name="targetType"
@@ -153,19 +153,19 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
 
       {targetType === 'image' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
             Upload Image (JPEG or PNG, max 2MB)
           </label>
           <input
             type="file"
             accept="image/jpeg,image/png"
             onChange={handleFileChange}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
             disabled={uploadingImage}
           />
-          {uploadingImage && <p className="mt-2 text-sm text-gray-600">Uploading...</p>}
+          {uploadingImage && <p className="mt-2 text-sm text-gray-300">Uploading...</p>}
           {selectedFile && hostedImageId && (
-            <p className="mt-2 text-sm text-green-600">Image uploaded successfully</p>
+            <p className="mt-2 text-sm text-green-400">Image uploaded successfully</p>
           )}
         </div>
       )}

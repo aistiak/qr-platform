@@ -85,7 +85,7 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
 
   if (error) {
     return (
-      <div className="text-red-600 text-center py-8">
+      <div className="text-red-400 text-center py-8">
         {error}
       </div>
     );
@@ -94,7 +94,7 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
   if (qrCodes.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600 mb-4">No QR codes yet. Create your first QR code to get started.</p>
+        <p className="text-gray-300 mb-4">No QR codes yet. Create your first QR code to get started.</p>
         <Link href="/dashboard/qr/create">
           <Button>Create QR Code</Button>
         </Link>
@@ -125,7 +125,7 @@ export function QRCodeList({ status = 'active', showArchived = false }: QRCodeLi
 
       {showArchived && archivedQRCodes.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Archived QR Codes</h3>
+          <h3 className="text-lg font-semibold mb-4 text-white">Archived QR Codes</h3>
           <div className="space-y-4">
             {archivedQRCodes.map((qr) => (
               <QRCodeCard

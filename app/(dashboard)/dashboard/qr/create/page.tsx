@@ -42,10 +42,10 @@ export default function CreateQRCodePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-900 p-4">
       <div className="max-w-2xl mx-auto">
         <Card>
-          <h1 className="text-2xl font-bold mb-6">Create QR Code</h1>
+          <h1 className="text-2xl font-bold mb-6 text-white">Create QR Code</h1>
 
           {error && <ErrorMessage message={error} className="mb-4" />}
 

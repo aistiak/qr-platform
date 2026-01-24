@@ -157,35 +157,35 @@ export function QRCodeCard({
             <QRCodeViewer data={scanUrl} size={150} />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2">{customName}</h3>
-            <div className="space-y-1 text-sm text-gray-600">
+            <h3 className="text-lg font-semibold mb-2 text-white">{customName}</h3>
+            <div className="space-y-1 text-sm text-gray-300">
               <p>
-                <span className="font-medium">Type:</span> {targetType === 'url' ? 'URL' : 'Image'}
+                <span className="font-medium text-white">Type:</span> {targetType === 'url' ? 'URL' : 'Image'}
               </p>
               {targetType === 'url' && targetUrl && (
                 <p className="truncate">
-                  <span className="font-medium">Target:</span> {targetUrl}
+                  <span className="font-medium text-white">Target:</span> {targetUrl}
                 </p>
               )}
               <p>
-                <span className="font-medium">Status:</span>{' '}
+                <span className="font-medium text-white">Status:</span>{' '}
                 <span
                   className={`px-2 py-1 rounded text-xs ${
                     status === 'active'
-                      ? 'bg-green-100 text-green-800'
+                      ? 'bg-green-900 text-green-300'
                       : status === 'paused'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-yellow-900 text-yellow-300'
+                      : 'bg-gray-700 text-gray-300'
                   }`}
                 >
                   {status}
                 </span>
               </p>
               <p>
-                <span className="font-medium">Scans:</span> {accessCount}
+                <span className="font-medium text-white">Scans:</span> {accessCount}
               </p>
               <p>
-                <span className="font-medium">Created:</span>{' '}
+                <span className="font-medium text-white">Created:</span>{' '}
                 {new Date(createdAt).toLocaleDateString()}
               </p>
             </div>

@@ -35,13 +35,13 @@ export function Modal({
       aria-labelledby="modal-title"
     >
       <div
-        className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+        className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="modal-title" className="text-xl font-bold mb-4">
+        <h2 id="modal-title" className="text-xl font-bold mb-4 text-white">
           {title}
         </h2>
-        <p className="text-gray-600 mb-6">{message}</p>
+        <p className="text-gray-300 mb-6">{message}</p>
         <div className="flex gap-3 justify-end">
           <Button variant="secondary" onClick={onClose}>
             {cancelText}
