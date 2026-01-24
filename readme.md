@@ -40,12 +40,28 @@ This single command will:
 - Set up networking and volumes
 - Enable hot reload for development
 
-3. **Access the application**:
+3. **Create database indexes** (first time only):
+
+```bash
+docker-compose exec app npm run create-indexes
+# Or if running locally:
+npm run create-indexes
+```
+
+4. **Create admin user** (optional):
+
+```bash
+docker-compose exec app npm run create-admin
+# Or if running locally:
+npm run create-admin
+```
+
+5. **Access the application**:
 
 - Application: http://localhost:3000
 - MongoDB: localhost:27017
 
-4. **Stop everything**:
+6. **Stop everything**:
 
 ```bash
 docker-compose down

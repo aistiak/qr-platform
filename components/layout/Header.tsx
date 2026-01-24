@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { SignOutButton } from '@/components/auth/SignOutButton';
 import { Button } from '@/components/ui/Button';
+import { Home } from 'lucide-react';
 
 export function Header() {
   const { data: session } = useSession();
@@ -20,10 +21,12 @@ export function Header() {
           <nav className="flex items-center gap-4">
             {session ? (
               <>
-                <Link href="/dashboard">
-                  <Button variant="secondary" size="sm">
-                    Dashboard
-                  </Button>
+                <Link 
+                  href="/dashboard"
+                  className="p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                  title="Dashboard"
+                >
+                  <Home className="w-5 h-5" />
                 </Link>
                 {session.user?.role === 'admin' && (
                   <Link href="/admin">

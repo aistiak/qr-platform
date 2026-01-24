@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from 'next-auth/react';
-import { Button } from '@/components/ui/Button';
+import { LogOut } from 'lucide-react';
 
 export function SignOutButton() {
   const handleSignOut = async () => {
@@ -9,8 +9,13 @@ export function SignOutButton() {
   };
 
   return (
-    <Button variant="secondary" onClick={handleSignOut}>
-      Sign Out
-    </Button>
+    <button
+      onClick={handleSignOut}
+      className="p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+      title="Sign Out"
+      aria-label="Sign Out"
+    >
+      <LogOut className="w-5 h-5" />
+    </button>
   );
 }
