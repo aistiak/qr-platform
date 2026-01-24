@@ -4,6 +4,7 @@ import QRCode from '@/lib/models/QRCode';
 import HostedImage from '@/lib/models/HostedImage'; // Import to register the model
 import QRCodeAccess from '@/lib/models/QRCodeAccess';
 import { notFoundResponse } from '@/lib/utils/api-response';
+import { getBaseUrl } from '@/lib/utils/url';
 
 export async function GET(
   request: NextRequest,
@@ -43,7 +44,8 @@ export async function GET(
       redirectUrl = qrCode.targetUrl;
     } else if (qrCode.targetType === 'image' && qrCode.hostedImageId) {
       const hostedImage = qrCode.hostedImageId as any;
-      redirectUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}${hostedImage.filePath}`;
+      const baseUrl = getBaseUrl(request);
+      redirectUrl = `${baseUrl}${hostedImage.filePath}`;
     } else {
       return notFoundResponse();
     }

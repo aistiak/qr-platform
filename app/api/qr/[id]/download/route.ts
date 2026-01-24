@@ -8,6 +8,7 @@ import {
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
 import { generateQRCodeBuffer } from '@/lib/qr/generator';
+import { getScanUrl } from '@/lib/utils/url';
 
 export async function GET(
   request: NextRequest,
@@ -36,8 +37,8 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'png';
 
-    // Generate scan URL
-    const scanUrl = `${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${params.id}`;
+    // Generate scan URL using the base URL utility
+    const scanUrl = getScanUrl(params.id, request);
 
     const sanitizedName = qrCode.customName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 

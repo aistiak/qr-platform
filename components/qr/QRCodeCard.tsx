@@ -13,6 +13,7 @@ import {
   copyToClipboard,
   isWebShareSupported,
 } from '@/lib/utils/share';
+import { getScanUrl } from '@/lib/utils/url';
 
 interface QRCodeCardProps {
   id: string;
@@ -59,8 +60,8 @@ export function QRCodeCard({
     }
   }, [showDownloadMenu]);
 
-  // Generate scan URL
-  const scanUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
+  // Generate scan URL using utility
+  const scanUrl = getScanUrl(id);
 
   const handlePause = async () => {
     if (status === 'paused') {

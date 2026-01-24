@@ -9,12 +9,16 @@ export interface ShareOptions {
   files?: File[];
 }
 
+import { getScanUrl } from './url';
+
 /**
  * Generate a shareable link for a QR code
  */
-export function generateShareLink(qrCodeId: string, baseUrl?: string): string {
-  const appUrl = baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  return `${appUrl}/api/scan/${qrCodeId}`;
+export function generateShareLink(qrCodeId: string, baseUrl?: string, request?: Request): string {
+  if (baseUrl) {
+    return `${baseUrl}/api/scan/${qrCodeId}`;
+  }
+  return getScanUrl(qrCodeId, request);
 }
 
 /**

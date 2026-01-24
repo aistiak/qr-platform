@@ -5,6 +5,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { QRCodeViewer } from '@/components/qr/QRCodeViewer';
 import Link from 'next/link';
+import { getScanUrl } from '@/lib/utils/url';
 
 interface QRCode {
   id: string;
@@ -70,8 +71,7 @@ export function AdminQRCodeList() {
     );
   }
 
-  const scanUrl = (id: string) =>
-    `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
+  const scanUrl = (id: string) => getScanUrl(id);
 
   return (
     <div className="space-y-6">

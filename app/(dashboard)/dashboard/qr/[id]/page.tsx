@@ -214,7 +214,8 @@ export default function QRCodeDetailPage() {
     );
   }
 
-  const scanUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/${id}`;
+  const { getScanUrl } = await import('@/lib/utils/url');
+  const scanUrl = getScanUrl(id);
 
   return (
     <div className="min-h-screen bg-gray-900 p-4">
