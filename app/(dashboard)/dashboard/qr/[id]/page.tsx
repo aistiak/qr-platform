@@ -32,6 +32,12 @@ export default function QRCodeDetailPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [customName, setCustomName] = useState('');
+  const [targetType, setTargetType] = useState<'url' | 'image'>('url');
+  const [targetUrl, setTargetUrl] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [hostedImageId, setHostedImageId] = useState<string | null>(null);
+  const [savingTarget, setSavingTarget] = useState(false);
 
   useEffect(() => {
     fetchQRCode();
@@ -49,6 +55,9 @@ export default function QRCodeDetailPage() {
 
       setQrCode(data);
       setCustomName(data.customName);
+      setTargetType(data.targetType);
+      setTargetUrl(data.targetUrl || '');
+      setHostedImageId(data.hostedImageId?.id || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load QR code');
     } finally {
@@ -60,6 +69,7 @@ export default function QRCodeDetailPage() {
     if (!qrCode) return;
 
     setSaving(true);
+    setError('');
     try {
       const response = await fetch(`/api/qr/${id}`, {
         method: 'PATCH',
@@ -79,6 +89,103 @@ export default function QRCodeDetailPage() {
       setError(err instanceof Error ? err.message : 'Failed to update QR code');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file
+    if (file.size > 2 * 1024 * 1024) {
+      setError('File size must be less than 2MB');
+      return;
+    }
+
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      setError('Only JPEG and PNG images are allowed');
+      return;
+    }
+
+    setSelectedFile(file);
+    setError('');
+    setUploadingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to upload image');
+      }
+
+      const data = await response.json();
+      setHostedImageId(data.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload image');
+      setSelectedFile(null);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleSaveTarget = async () => {
+    if (!qrCode) return;
+
+    setSavingTarget(true);
+    setError('');
+
+    try {
+      // Validate based on target type
+      if (targetType === 'url' && !targetUrl) {
+        setError('Please provide a URL');
+        setSavingTarget(false);
+        return;
+      }
+
+      if (targetType === 'image' && !hostedImageId) {
+        setError('Please upload an image');
+        setSavingTarget(false);
+        return;
+      }
+
+      const updateData: any = {
+        targetType,
+      };
+
+      if (targetType === 'url') {
+        updateData.targetUrl = targetUrl;
+      } else {
+        updateData.hostedImageId = hostedImageId;
+      }
+
+      const response = await fetch(`/api/qr/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update QR code target');
+      }
+
+      const data = await response.json();
+      setQrCode(data);
+      setTargetUrl(data.targetUrl || '');
+      setHostedImageId(data.hostedImageId?.id || null);
+      setSelectedFile(null);
+      alert('QR code target updated successfully');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update QR code target');
+    } finally {
+      setSavingTarget(false);
     }
   };
 
@@ -147,23 +254,93 @@ export default function QRCodeDetailPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2 text-sm text-gray-300">
-                  <p>
-                    <span className="font-medium text-white">Type:</span> {qrCode.targetType === 'url' ? 'URL' : 'Image'}
-                  </p>
-                  {qrCode.targetType === 'url' && qrCode.targetUrl && (
-                    <p>
-                      <span className="font-medium text-white">Target URL:</span>{' '}
-                      <a
-                        href={qrCode.targetUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 hover:underline"
-                      >
-                        {qrCode.targetUrl}
-                      </a>
-                    </p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Target Type
+                  </label>
+                  <div className="flex gap-4 mb-4">
+                    <label className="flex items-center text-gray-300">
+                      <input
+                        type="radio"
+                        name="targetType"
+                        value="url"
+                        checked={targetType === 'url'}
+                        onChange={(e) => {
+                          setTargetType('url');
+                          setHostedImageId(null);
+                          setSelectedFile(null);
+                        }}
+                        className="mr-2"
+                      />
+                      URL
+                    </label>
+                    <label className="flex items-center text-gray-300">
+                      <input
+                        type="radio"
+                        name="targetType"
+                        value="image"
+                        checked={targetType === 'image'}
+                        onChange={(e) => {
+                          setTargetType('image');
+                          setTargetUrl('');
+                        }}
+                        className="mr-2"
+                      />
+                      Image
+                    </label>
+                  </div>
+
+                  {targetType === 'url' && (
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Target URL
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="targetUrl"
+                          type="url"
+                          value={targetUrl}
+                          onChange={(e) => setTargetUrl(e.target.value)}
+                          placeholder="https://example.com"
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
                   )}
+
+                  {targetType === 'image' && (
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Upload Image (JPEG or PNG, max 2MB)
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png"
+                        onChange={handleFileChange}
+                        className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mb-2"
+                        disabled={uploadingImage}
+                      />
+                      {uploadingImage && <p className="text-sm text-gray-300">Uploading...</p>}
+                      {selectedFile && hostedImageId && (
+                        <p className="text-sm text-green-400">Image uploaded successfully</p>
+                      )}
+                      {hostedImageId && !selectedFile && (
+                        <p className="text-sm text-gray-400">Current image is set</p>
+                      )}
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={handleSaveTarget}
+                    loading={savingTarget || uploadingImage}
+                    size="sm"
+                    className="mb-4"
+                  >
+                    Save Target
+                  </Button>
+                </div>
+
+                <div className="space-y-2 text-sm text-gray-300">
                   <p>
                     <span className="font-medium text-white">Status:</span>{' '}
                     <span

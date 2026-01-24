@@ -25,6 +25,11 @@ export default async function DashboardPage() {
               <Link href="/dashboard/qr/create">
                 <Button>Create QR Code</Button>
               </Link>
+              {session.user?.role === 'admin' && (
+                <Link href="/admin">
+                  <Button variant="secondary">Admin</Button>
+                </Link>
+              )}
               <SignOutButton />
             </div>
           </div>

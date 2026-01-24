@@ -195,6 +195,17 @@ paths:
                 status:
                   type: string
                   enum: [active, paused, archived]
+                targetType:
+                  type: string
+                  enum: [url, image]
+                  description: Target type for the QR code
+                targetUrl:
+                  type: string
+                  format: uri
+                  description: Target URL (required when targetType is "url")
+                hostedImageId:
+                  type: string
+                  description: Hosted image ID (required when targetType is "image")
       responses:
         '200':
           description: QR code updated

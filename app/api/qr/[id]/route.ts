@@ -8,12 +8,11 @@ import {
 } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import QRCode from '@/lib/models/QRCode';
-import { z } from 'zod';
-
-const updateQRCodeSchema = z.object({
-  customName: z.string().max(100).optional(),
-  status: z.enum(['active', 'paused', 'archived']).optional(),
-});
+import HostedImage from '@/lib/models/HostedImage';
+import { updateQRCodeSchema } from '@/lib/utils/validation';
+import { validateURL } from '@/lib/qr/validator';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export async function GET(
   request: NextRequest,
@@ -95,7 +94,7 @@ export async function PATCH(
       );
     }
 
-    const { customName, status } = validationResult.data;
+    const { customName, status, targetType, targetUrl, hostedImageId } = validationResult.data;
 
     if (customName !== undefined) {
       qrCode.customName = customName;
@@ -119,7 +118,98 @@ export async function PATCH(
       qrCode.status = status;
     }
 
+    // Handle target type and target updates
+    let targetChanged = false;
+    const oldHostedImageId = qrCode.hostedImageId;
+
+    if (targetType !== undefined) {
+      qrCode.targetType = targetType;
+      targetChanged = true;
+
+      if (targetType === 'url') {
+        // Switching to URL - clear hosted image
+        qrCode.hostedImageId = undefined;
+        if (targetUrl) {
+          // Validate URL
+          const urlValidation = validateURL(targetUrl);
+          if (!urlValidation.valid) {
+            return errorResponse(urlValidation.error || 'Invalid URL', 400);
+          }
+          qrCode.targetUrl = targetUrl;
+        }
+      } else if (targetType === 'image') {
+        // Switching to image - clear target URL
+        qrCode.targetUrl = undefined;
+        if (hostedImageId) {
+          // Validate hosted image exists and belongs to user
+          const hostedImage = await HostedImage.findOne({
+            _id: hostedImageId,
+            userId: auth.user.id,
+          });
+          if (!hostedImage) {
+            return errorResponse('Hosted image not found or access denied', 404);
+          }
+          qrCode.hostedImageId = hostedImage._id;
+        }
+      }
+    } else {
+      // Updating target without changing type
+      if (targetUrl !== undefined && qrCode.targetType === 'url') {
+        const urlValidation = validateURL(targetUrl);
+        if (!urlValidation.valid) {
+          return errorResponse(urlValidation.error || 'Invalid URL', 400);
+        }
+        qrCode.targetUrl = targetUrl;
+        targetChanged = true;
+      }
+
+      if (hostedImageId !== undefined && qrCode.targetType === 'image') {
+        // Validate hosted image exists and belongs to user
+        const hostedImage = await HostedImage.findOne({
+          _id: hostedImageId,
+          userId: auth.user.id,
+        });
+        if (!hostedImage) {
+          return errorResponse('Hosted image not found or access denied', 404);
+        }
+        qrCode.hostedImageId = hostedImage._id;
+        targetChanged = true;
+      }
+    }
+
     await qrCode.save();
+
+    // Cleanup old hosted image if switching from image to URL
+    if (targetChanged && oldHostedImageId && qrCode.targetType === 'url') {
+      try {
+        const oldImage = await HostedImage.findById(oldHostedImageId);
+        if (oldImage) {
+          // Check if image is used by other QR codes
+          const otherQRCodes = await QRCode.countDocuments({
+            hostedImageId: oldHostedImageId,
+            _id: { $ne: qrCode._id },
+          });
+
+          // Only delete if not used by other QR codes
+          if (otherQRCodes === 0) {
+            const filePath = path.join(
+              process.cwd(),
+              'public',
+              oldImage.filePath.startsWith('/') ? oldImage.filePath.slice(1) : oldImage.filePath
+            );
+            try {
+              await fs.unlink(filePath);
+            } catch (fileError) {
+              console.error('Failed to delete old image file:', fileError);
+            }
+            await HostedImage.findByIdAndDelete(oldHostedImageId);
+          }
+        }
+      } catch (cleanupError) {
+        console.error('Failed to cleanup old hosted image:', cleanupError);
+        // Don't fail the update if cleanup fails
+      }
+    }
 
     const updatedQR = await QRCode.findById(qrCode._id)
       .populate('hostedImageId', 'filename filePath')

@@ -91,24 +91,24 @@
 
 ### Implementation for User Story 2
 
-- [ ] T035 [US2] Create QR code generation utility in lib/qr/generator.ts using qrcode library
-- [ ] T036 [US2] Create URL validation utility in lib/qr/validator.ts
-- [ ] T037 [US2] Create image upload handler in lib/utils/image-upload.ts with size and format validation
-- [ ] T038 [US2] Create image upload API route in app/api/images/route.ts (POST) with file validation
-- [ ] T039 [US2] Create image serving API route in app/api/images/[id]/route.ts (GET)
-- [ ] T040 [US2] Create QR code creation API route in app/api/qr/route.ts (POST) with limit checking
-- [ ] T041 [US2] Create QR code list API route in app/api/qr/route.ts (GET) for user's QR codes
-- [ ] T042 [US2] Create QR code scan handler API route in app/api/scan/[id]/route.ts with redirect logic
-- [ ] T043 [US2] Create QR code creation page component in app/(dashboard)/qr/create/page.tsx with form
-- [ ] T044 [US2] Create QR code list page component in app/(dashboard)/dashboard/page.tsx
-- [ ] T045 [US2] Create QRCodeCard component in components/qr/QRCodeCard.tsx for displaying QR codes
-- [ ] T046 [US2] Create QRCodeForm component in components/qr/QRCodeForm.tsx with URL and image upload options
-- [ ] T047 [US2] Create QRCodeViewer component in components/qr/QRCodeViewer.tsx for displaying QR code image
-- [ ] T048 [US2] Create Card component in components/ui/Card.tsx for reusable card layout
-- [ ] T049 [US2] Create LoadingSpinner component in components/ui/LoadingSpinner.tsx
-- [ ] T050 [US2] Implement QR code limit enforcement in QR code creation logic
-- [ ] T051 [US2] Add error handling for invalid URLs and image upload failures
-- [ ] T052 [US2] Create protected route middleware for dashboard routes
+- [x] T035 [US2] Create QR code generation utility in lib/qr/generator.ts using qrcode library
+- [x] T036 [US2] Create URL validation utility in lib/qr/validator.ts
+- [x] T037 [US2] Create image upload handler in lib/utils/image-upload.ts with size and format validation
+- [x] T038 [US2] Create image upload API route in app/api/images/route.ts (POST) with file validation
+- [x] T039 [US2] Create image serving API route in app/api/images/[id]/route.ts (GET)
+- [x] T040 [US2] Create QR code creation API route in app/api/qr/route.ts (POST) with limit checking
+- [x] T041 [US2] Create QR code list API route in app/api/qr/route.ts (GET) for user's QR codes
+- [x] T042 [US2] Create QR code scan handler API route in app/api/scan/[id]/route.ts with redirect logic
+- [x] T043 [US2] Create QR code creation page component in app/(dashboard)/qr/create/page.tsx with form
+- [x] T044 [US2] Create QR code list page component in app/(dashboard)/dashboard/page.tsx
+- [x] T045 [US2] Create QRCodeCard component in components/qr/QRCodeCard.tsx for displaying QR codes
+- [x] T046 [US2] Create QRCodeForm component in components/qr/QRCodeForm.tsx with URL and image upload options
+- [x] T047 [US2] Create QRCodeViewer component in components/qr/QRCodeViewer.tsx for displaying QR code image
+- [x] T048 [US2] Create Card component in components/ui/Card.tsx for reusable card layout
+- [x] T049 [US2] Create LoadingSpinner component in components/ui/LoadingSpinner.tsx
+- [x] T050 [US2] Implement QR code limit enforcement in QR code creation logic
+- [x] T051 [US2] Add error handling for invalid URLs and image upload failures
+- [x] T052 [US2] Create protected route middleware for dashboard routes
 
 **Checkpoint**: At this point, User Story 2 should be fully functional. Users can create QR codes with URLs or images, view their QR codes, and scan them to redirect.
 
@@ -136,20 +136,20 @@
 - [x] T064 [US3] Add edit custom name functionality in QR code detail page
 - [x] T065 [US3] Create archived QR codes section in dashboard with restore functionality
 - [x] T066 [US3] Update QR code status transitions validation in QRCode model
-- [ ] T067 [US3] Update QR code update validation schema in lib/utils/validation.ts to support targetUrl and hostedImageId
-- [ ] T068 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle targetUrl updates with URL validation
-- [ ] T069 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle hostedImageId updates with image validation
-- [ ] T070 [US3] Add logic to regenerate QR code when target URL or image changes in app/api/qr/[id]/route.ts
-- [ ] T071 [US3] Add edit target URL input field to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
-- [ ] T072 [US3] Add edit target image upload functionality to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
-- [ ] T073 [US3] Add target type switching (URL to Image or vice versa) to QR code detail page
-- [ ] T074 [US3] Update QRCodeForm component in components/qr/QRCodeForm.tsx to support edit mode with existing values
-- [ ] T075 [US3] Add validation for target URL format when editing in QR code detail page
-- [ ] T076 [US3] Add validation for image upload when editing target image in QR code detail page
-- [ ] T077 [US3] Update API contract in specs/001-qr-platform/contracts/api.yaml to document targetUrl and hostedImageId in PATCH request
-- [ ] T078 [US3] Handle cleanup of old hosted image when switching from image to URL target type
-- [ ] T079 [US3] Add success feedback when QR code target is updated successfully
-- [ ] T080 [US3] Add error handling for invalid target URL or image upload failures during edit
+- [x] T067 [US3] Update QR code update validation schema in lib/utils/validation.ts to support targetUrl and hostedImageId
+- [x] T068 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle targetUrl updates with URL validation
+- [x] T069 [US3] Extend PATCH API route in app/api/qr/[id]/route.ts to handle hostedImageId updates with image validation
+- [x] T070 [US3] Add logic to regenerate QR code when target URL or image changes in app/api/qr/[id]/route.ts
+- [x] T071 [US3] Add edit target URL input field to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
+- [x] T072 [US3] Add edit target image upload functionality to QR code detail page in app/(dashboard)/dashboard/qr/[id]/page.tsx
+- [x] T073 [US3] Add target type switching (URL to Image or vice versa) to QR code detail page
+- [x] T074 [US3] Update QRCodeForm component in components/qr/QRCodeForm.tsx to support edit mode with existing values
+- [x] T075 [US3] Add validation for target URL format when editing in QR code detail page
+- [x] T076 [US3] Add validation for image upload when editing target image in QR code detail page
+- [x] T077 [US3] Update API contract in specs/001-qr-platform/contracts/api.yaml to document targetUrl and hostedImageId in PATCH request
+- [x] T078 [US3] Handle cleanup of old hosted image when switching from image to URL target type
+- [x] T079 [US3] Add success feedback when QR code target is updated successfully
+- [x] T080 [US3] Add error handling for invalid target URL or image upload failures during edit
 
 **Checkpoint**: At this point, User Story 3 should be fully functional. Users can manage their QR codes: rename, pause, resume, archive, restore, delete, and edit target URLs/images.
 
@@ -209,19 +209,19 @@
 
 ### Implementation for User Story 6
 
-- [ ] T101 [US6] Create admin middleware utility in lib/utils/admin-middleware.ts to check admin role
-- [ ] T102 [US6] Create admin users list API route in app/api/admin/users/route.ts (GET)
-- [ ] T103 [US6] Create admin user update API route in app/api/admin/users/[id]/route.ts (PATCH) for QR code limit
-- [ ] T104 [US6] Create admin QR codes list API route in app/api/admin/qr/route.ts (GET)
-- [ ] T105 [US6] Create admin dashboard page component in app/(dashboard)/admin/page.tsx
-- [ ] T106 [US6] Create admin users list page component in app/(dashboard)/admin/users/page.tsx
-- [ ] T107 [US6] Create admin user detail/edit page component in app/(dashboard)/admin/users/[id]/page.tsx
-- [ ] T108 [US6] Create UserList component in components/admin/UserList.tsx for displaying all users
-- [ ] T109 [US6] Create UserEditForm component in components/admin/UserEditForm.tsx for editing user QR code limit
-- [ ] T110 [US6] Add admin navigation link to dashboard navigation
-- [ ] T111 [US6] Protect admin routes with admin middleware
-- [ ] T112 [US6] Add user role display and QR code limit editing in admin user detail page
-- [ ] T113 [US6] Create admin QR codes view showing all QR codes with user information
+- [x] T101 [US6] Create admin middleware utility in lib/utils/admin-middleware.ts to check admin role
+- [x] T102 [US6] Create admin users list API route in app/api/admin/users/route.ts (GET)
+- [x] T103 [US6] Create admin user update API route in app/api/admin/users/[id]/route.ts (PATCH) for QR code limit
+- [x] T104 [US6] Create admin QR codes list API route in app/api/admin/qr/route.ts (GET)
+- [x] T105 [US6] Create admin dashboard page component in app/(dashboard)/admin/page.tsx
+- [x] T106 [US6] Create admin users list page component in app/(dashboard)/admin/users/page.tsx
+- [x] T107 [US6] Create admin user detail/edit page component in app/(dashboard)/admin/users/[id]/page.tsx
+- [x] T108 [US6] Create UserList component in components/admin/UserList.tsx for displaying all users
+- [x] T109 [US6] Create UserEditForm component in components/admin/UserEditForm.tsx for editing user QR code limit
+- [x] T110 [US6] Add admin navigation link to dashboard navigation
+- [x] T111 [US6] Protect admin routes with admin middleware
+- [x] T112 [US6] Add user role display and QR code limit editing in admin user detail page
+- [x] T113 [US6] Create admin QR codes view showing all QR codes with user information
 
 **Checkpoint**: At this point, User Story 6 should be fully functional. Administrators can view all users and QR codes, and modify user QR code limits.
 
