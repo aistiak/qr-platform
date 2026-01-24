@@ -1,0 +1,29 @@
+# qr-platform Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-01-24
+
+## Active Technologies
+
+- TypeScript 5.x, Node.js 20.x LTS + Next.js 14+ (App Router), React 18+, MongoDB (via Mongoose or native driver), NextAuth.js for authentication, QR code generation library (qrcode.js or similar), image processing library (sharp or similar) (001-qr-platform)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+TypeScript 5.x, Node.js 20.x LTS: Follow standard conventions
+
+## Recent Changes
+
+- 001-qr-platform: Added TypeScript 5.x, Node.js 20.x LTS + Next.js 14+ (App Router), React 18+, MongoDB (via Mongoose or native driver), NextAuth.js for authentication, QR code generation library (qrcode.js or similar), image processing library (sharp or similar)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
