@@ -32,6 +32,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+# Change ownership of all files to nextjs user
+RUN chown -R nextjs:nodejs /app
+
 USER nextjs
 
 EXPOSE 3000
