@@ -63,6 +63,10 @@ export const authOptions: NextAuthConfig = {
         if (token && session.user) {
           session.user.id = token.sub || '';
           session.user.role = (token.role as string) || 'user';
+          // Debug logging in development
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[NextAuth Session] Setting session role:', session.user.role, 'from token role:', token.role);
+          }
         }
         return session;
       } catch (error) {
@@ -80,6 +84,15 @@ export const authOptions: NextAuthConfig = {
         if (user) {
           token.sub = user.id;
           token.role = user.role;
+          // Debug logging in development
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[NextAuth JWT] Setting token role:', user.role);
+          }
+        }
+        
+        // Debug logging in development
+        if (process.env.NODE_ENV === 'development' && !user && token) {
+          console.log('[NextAuth JWT] Current token role:', token.role);
         }
         
         return token;

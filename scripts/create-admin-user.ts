@@ -10,13 +10,48 @@
  */
 
 // Load environment variables from .env.local, .env, etc.
-import dotenv from 'dotenv';
+// MUST be loaded before any other imports that use process.env
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
-// Try to load .env.local first, then .env
-dotenv.config({ path: resolve(process.cwd(), '.env.local') });
-dotenv.config({ path: resolve(process.cwd(), '.env') });
+// Synchronously load .env.local first, then .env
+// This ensures env vars are set before any imports are evaluated
+function loadEnvFile(filePath: string): void {
+  try {
+    const content = readFileSync(filePath, 'utf-8');
+    content.split('\n').forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        const equalIndex = trimmed.indexOf('=');
+        if (equalIndex > 0) {
+          const key = trimmed.substring(0, equalIndex).trim();
+          const value = trimmed.substring(equalIndex + 1).trim();
+          // Remove quotes if present
+          const cleanValue = value.replace(/^["']|["']$/g, '');
+          if (key && !process.env[key]) {
+            process.env[key] = cleanValue;
+          }
+        }
+      }
+    });
+  } catch (err) {
+    // File doesn't exist, that's okay
+  }
+}
 
+// Load .env.local first, then .env
+loadEnvFile(resolve(process.cwd(), '.env.local'));
+loadEnvFile(resolve(process.cwd(), '.env'));
+
+// Verify MONGODB_URI is loaded before importing modules that need it
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables');
+  console.error('   Please ensure .env.local or .env file exists with MONGODB_URI');
+  console.error('   Example: MONGODB_URI=mongodb://admin:adminpassword@localhost:27017/qr-platform?authSource=admin');
+  process.exit(1);
+}
+
+// Now import modules that depend on environment variables
 import { connectDB } from '../lib/db/mongodb';
 import User from '../lib/models/User';
 import bcrypt from 'bcryptjs';

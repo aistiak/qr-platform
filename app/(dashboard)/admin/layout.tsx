@@ -12,7 +12,20 @@ export default async function AdminLayout({
     redirect('/auth/signin');
   }
 
+  // Debug logging in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[AdminLayout] Session user role:', session.user?.role);
+    console.log('[AdminLayout] Session user:', {
+      id: session.user?.id,
+      email: session.user?.email,
+      role: session.user?.role,
+    });
+  }
+
   if (session.user?.role !== 'admin') {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[AdminLayout] User is not admin, redirecting to dashboard');
+    }
     redirect('/dashboard');
   }
 
