@@ -4,6 +4,9 @@ import { errorResponse, successResponse } from '@/lib/utils/api-response';
 import { connectDB } from '@/lib/db/mongodb';
 import User from '@/lib/models/User';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const auth = await requireAdmin(request);
 

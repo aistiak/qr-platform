@@ -10,6 +10,9 @@ import User from '@/lib/models/User';
 import { logger } from '@/lib/utils/logger';
 import { z } from 'zod';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 const updateUserSchema = z.object({
   qrCodeLimit: z.number().int().min(1, 'QR code limit must be at least 1'),
 });

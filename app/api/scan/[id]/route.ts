@@ -7,6 +7,9 @@ import QRCodeAccess from '@/lib/models/QRCodeAccess';
 import { notFoundResponse } from '@/lib/utils/api-response';
 import { getBaseUrl } from '@/lib/utils/url';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -6,6 +6,9 @@ import { signUpSchema } from '@/lib/utils/validation';
 import { createdResponse, errorResponse } from '@/lib/utils/api-response';
 import { logger } from '@/lib/utils/logger';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB();

@@ -6,6 +6,9 @@ import QRCode from '@/lib/models/QRCode';
 // Import HostedImage to register the model for population
 import '@/lib/models/HostedImage';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const auth = await requireAdmin(request);
 

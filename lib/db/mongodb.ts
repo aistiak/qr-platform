@@ -1,13 +1,5 @@
 import mongoose from 'mongoose';
 
-// Get MONGODB_URI from environment, with a fallback for scripts
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  console.error('MONGODB_URI is not defined in environment variables');
-  throw new Error('Please define MONGODB_URI in .env.local');
-}
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -24,7 +16,26 @@ if (!global.mongoose) {
   global.mongoose = cached;
 }
 
+/**
+ * Get MONGODB_URI from environment
+ * This is called lazily when connectDB() is invoked, not at module load time
+ * This allows the module to be imported during build without requiring env vars
+ */
+function getMongoUri(): string {
+  const MONGODB_URI = process.env.MONGODB_URI;
+  
+  if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined in environment variables');
+    throw new Error('Please define MONGODB_URI in .env.local');
+  }
+  
+  return MONGODB_URI;
+}
+
 export async function connectDB(): Promise<typeof mongoose> {
+  // Check for MONGODB_URI only when actually connecting, not at import time
+  const MONGODB_URI = getMongoUri();
+  
   if (cached.conn) {
     return cached.conn;
   }
@@ -34,7 +45,7 @@ export async function connectDB(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose;
     });
   }

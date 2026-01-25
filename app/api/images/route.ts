@@ -3,6 +3,9 @@ import { requireAuth } from '@/lib/utils/auth-middleware';
 import { unauthorizedResponse, errorResponse, createdResponse } from '@/lib/utils/api-response';
 import { uploadAndProcessImage } from '@/lib/utils/image-upload';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(request);
 

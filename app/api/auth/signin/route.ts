@@ -5,6 +5,9 @@ import { connectDB } from '@/lib/db/mongodb';
 import User from '@/lib/models/User';
 import bcrypt from 'bcryptjs';
 
+// Disable static generation - this route requires runtime execution
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

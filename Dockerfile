@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npx pnpm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
