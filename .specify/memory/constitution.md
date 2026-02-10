@@ -11,7 +11,7 @@ Templates requiring updates:
 Follow-up TODOs: None
 -->
 
-# QR Platform Constitution
+# QR Host Constitution
 
 ## Core Principles
 

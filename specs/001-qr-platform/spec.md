@@ -1,4 +1,4 @@
-# Feature Specification: QR Platform
+# Feature Specification: QR Host
 
 **Feature Branch**: `001-qr-platform`  
 **Created**: 2026-01-24  

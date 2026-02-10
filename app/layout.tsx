@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'QR Platform – Create, manage & track QR codes',
+  title: 'QR Host – Create, manage & track QR codes',
   description: 'Create, manage, and track QR codes with ease. Dynamic links, analytics, and bulk generation.',
 };
 

@@ -9,7 +9,7 @@ const items = [
     a: 'Dynamic QR codes let you change the destination URL anytime without reprinting. Use them for menus, events, product info, landing pages, and campaigns. Scans are tracked so you can see performance.',
   },
   {
-    q: 'Do I need technical skills to use QR Platform?',
+    q: 'Do I need technical skills to use QR Host?',
     a: 'No. Create a QR code in minutes: paste a URL, optionally add a logo or style, and download. Analytics are shown in simple dashboards—no coding required.',
   },
   {

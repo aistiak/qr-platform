@@ -19,7 +19,7 @@ export function Header() {
             href="/"
             className="text-xl font-bold text-foreground hover:opacity-90 transition-opacity tracking-tight"
           >
-            QR Platform
+            QR Host
           </Link>
           <nav className="hidden sm:flex items-center gap-6">
             {session ? (

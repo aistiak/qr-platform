@@ -1,4 +1,4 @@
-# Tasks: QR Platform
+# Tasks: QR Host
 
 **Input**: Design documents from `/specs/001-qr-platform/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/

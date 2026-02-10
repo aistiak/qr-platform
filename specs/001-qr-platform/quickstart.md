@@ -1,7 +1,7 @@
-# Quickstart Guide: QR Platform
+# Quickstart Guide: QR Host
 
 **Date**: 2026-01-24  
-**Feature**: QR Platform
+**Feature**: QR Host
 
 ## Prerequisites
 

@@ -1,4 +1,4 @@
-# Specification Quality Checklist: QR Platform
+# Specification Quality Checklist: QR Host
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-01-24

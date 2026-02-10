@@ -61,7 +61,7 @@ export function Footer() {
           </div>
           <div className="col-span-2 md:col-span-1 flex flex-col justify-end">
             <Link href="/" className="text-lg font-bold text-foreground mb-4">
-              QR Platform
+              QR Host
             </Link>
             <p className="text-muted text-sm">
               Create, manage, and track QR codes at scale.
@@ -69,7 +69,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border text-center text-muted text-sm">
-          <p>&copy; {new Date().getFullYear()} QR Platform. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} QR Host. All rights reserved.</p>
         </div>
       </div>
     </footer>
