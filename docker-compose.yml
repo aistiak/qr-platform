@@ -37,7 +37,9 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-change-this-secret-in-production}
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-${NEXTAUTH_URL:-http://localhost:3000}}
       - APP_URL=${APP_URL:-${NEXTAUTH_URL:-http://localhost:3000}}
-    # No volumes for production - uses built-in files from Dockerfile
+    # Persist uploaded images so they survive container restarts
+    volumes:
+      - uploaded_images:/app/public/images
     depends_on:
       mongodb:
         condition: service_healthy
@@ -49,6 +51,8 @@ volumes:
   mongodb_data:
     driver: local
   mongodb_config:
+    driver: local
+  uploaded_images:
     driver: local
 
 networks:

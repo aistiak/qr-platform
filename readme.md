@@ -134,6 +134,12 @@ npx playwright test
 
 See `.env.example` for required environment variables.
 
+
+## todo / roadmap
+[_] add google login
+[_] make ui better
+[_] add api support
+[_] email verification for email signup
 ## License
 
 MIT

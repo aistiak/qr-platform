@@ -11,6 +11,8 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import Link from 'next/link';
 import { getScanUrl } from '@/lib/utils/url';
 
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
+
 interface QRCode {
   id: string;
   customName: string;
@@ -37,11 +39,21 @@ export default function QRCodeDetailPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [hostedImageId, setHostedImageId] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [savingTarget, setSavingTarget] = useState(false);
 
   useEffect(() => {
     fetchQRCode();
   }, [id]);
+
+  // Revoke object URL when it changes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const fetchQRCode = async () => {
     try {
@@ -96,9 +108,9 @@ export default function QRCodeDetailPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file
-    if (file.size > 2 * 1024 * 1024) {
-      setError('File size must be less than 2MB');
+    // Validate file size (max 2MB)
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setError('File size must be 2MB or less');
       return;
     }
 
@@ -107,6 +119,10 @@ export default function QRCodeDetailPage() {
       return;
     }
 
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
     setError('');
     setUploadingImage(true);
@@ -130,6 +146,7 @@ export default function QRCodeDetailPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload image');
       setSelectedFile(null);
+      setPreviewUrl(null);
     } finally {
       setUploadingImage(false);
     }
@@ -181,6 +198,10 @@ export default function QRCodeDetailPage() {
       setTargetUrl(data.targetUrl || '');
       setHostedImageId(data.hostedImageId?.id || null);
       setSelectedFile(null);
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
       alert('QR code target updated successfully');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update QR code target');
@@ -269,6 +290,10 @@ export default function QRCodeDetailPage() {
                           setTargetType('url');
                           setHostedImageId(null);
                           setSelectedFile(null);
+                          if (previewUrl && previewUrl.startsWith('blob:')) {
+                            URL.revokeObjectURL(previewUrl);
+                          }
+                          setPreviewUrl(null);
                         }}
                         className="mr-2"
                       />
@@ -326,6 +351,16 @@ export default function QRCodeDetailPage() {
                       )}
                       {hostedImageId && !selectedFile && (
                         <p className="text-sm text-gray-400">Current image is set</p>
+                      )}
+                      {(previewUrl || hostedImageId) && !uploadingImage && (
+                        <div className="mt-3">
+                          <p className="text-sm font-medium text-gray-300 mb-2">Preview</p>
+                          <img
+                            src={previewUrl || `/api/images/${hostedImageId}`}
+                            alt="Upload preview"
+                            className="max-h-48 w-auto rounded-lg border border-gray-600 object-contain bg-gray-800"
+                          />
+                        </div>
                       )}
                     </div>
                   )}

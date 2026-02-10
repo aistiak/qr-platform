@@ -17,7 +17,7 @@ export async function GET(
   try {
     await connectDB();
 
-    const qrCode = await QRCode.findById(params.id).populate('hostedImageId', 'filePath');
+    const qrCode = await QRCode.findById(params.id).populate('hostedImageId', '_id filePath');
 
     if (!qrCode) {
       return notFoundResponse();
@@ -49,7 +49,7 @@ export async function GET(
     } else if (qrCode.targetType === 'image' && qrCode.hostedImageId) {
       const hostedImage = qrCode.hostedImageId as any;
       const baseUrl = getBaseUrl(request);
-      redirectUrl = `${baseUrl}${hostedImage.filePath}`;
+      redirectUrl = `${baseUrl}/api/images/${hostedImage._id}`;
     } else {
       return notFoundResponse();
     }

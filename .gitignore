@@ -16,6 +16,9 @@ next-env.d.ts
 /build
 /dist
 
+# Uploaded images (user content, persisted via Docker volume in prod)
+/public/images/
+
 # Misc
 .DS_Store
 *.pem
