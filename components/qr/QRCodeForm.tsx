@@ -120,11 +120,11 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-muted mb-2">
           Target Type
         </label>
         <div className="flex gap-4">
-          <label className="flex items-center text-gray-300">
+          <label className="flex items-center text-muted">
             <input
               type="radio"
               name="targetType"
@@ -143,7 +143,7 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
             />
             URL
           </label>
-          <label className="flex items-center text-gray-300">
+          <label className="flex items-center text-muted">
             <input
               type="radio"
               name="targetType"
@@ -174,27 +174,27 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
 
       {targetType === 'image' && (
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-muted mb-2">
             Upload Image (JPEG or PNG, max 2MB)
           </label>
           <input
             type="file"
             accept="image/jpeg,image/png"
             onChange={handleFileChange}
-            className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+            className="block w-full text-sm text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-foreground hover:file:bg-accent/90"
             disabled={uploadingImage}
           />
-          {uploadingImage && <p className="mt-2 text-sm text-gray-300">Uploading...</p>}
+          {uploadingImage && <p className="mt-2 text-sm text-muted">Uploading...</p>}
           {selectedFile && hostedImageId && (
-            <p className="mt-2 text-sm text-green-400">Image uploaded successfully</p>
+            <p className="mt-2 text-sm text-accent">Image uploaded successfully</p>
           )}
           {(previewUrl || hostedImageId) && !uploadingImage && (
             <div className="mt-3">
-              <p className="text-sm font-medium text-gray-300 mb-2">Preview</p>
+              <p className="text-sm font-medium text-muted mb-2">Preview</p>
               <img
                 src={previewUrl || `/api/images/${hostedImageId}`}
                 alt="Upload preview"
-                className="max-h-48 w-auto rounded-lg border border-gray-600 object-contain bg-gray-800"
+                className="max-h-48 w-auto rounded-lg border border-border object-contain bg-white/5"
               />
             </div>
           )}

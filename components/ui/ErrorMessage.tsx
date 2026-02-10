@@ -10,7 +10,7 @@ export function ErrorMessage({ message, className = '' }: ErrorMessageProps) {
 
   return (
     <div
-      className={`p-4 bg-red-900 border border-red-700 rounded-lg text-red-300 ${className}`}
+      className={`p-4 bg-red-950/50 border border-red-800 rounded-lg text-red-300 ${className}`}
       role="alert"
       aria-live="polite"
     >

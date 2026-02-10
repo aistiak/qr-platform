@@ -46,7 +46,7 @@ export function AnalyticsChart({ data, period }: AnalyticsChartProps) {
 
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-muted">
         No data available
       </div>
     );
@@ -56,42 +56,42 @@ export function AnalyticsChart({ data, period }: AnalyticsChartProps) {
     <ResponsiveContainer width="100%" height={300}>
       {useBarChart ? (
         <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
           <XAxis
             dataKey="date"
             tickFormatter={formatDateLabel}
-            stroke="#9CA3AF"
+            stroke="#a3a3a3"
             style={{ fontSize: '12px' }}
           />
-          <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+          <YAxis stroke="#a3a3a3" style={{ fontSize: '12px' }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1F2937',
-              border: '1px solid #374151',
+              backgroundColor: '#0a0a0a',
+              border: '1px solid #262626',
               borderRadius: '8px',
-              color: '#F3F4F6',
+              color: '#fff',
             }}
             labelFormatter={(label) => formatDateLabel(label)}
             formatter={(value: number) => [value, 'Accesses']}
           />
-          <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="count" fill="#b3f246" radius={[4, 4, 0, 0]} />
         </BarChart>
       ) : (
         <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#404040" />
           <XAxis
             dataKey="date"
             tickFormatter={formatDateLabel}
-            stroke="#9CA3AF"
+            stroke="#a3a3a3"
             style={{ fontSize: '12px' }}
           />
-          <YAxis stroke="#9CA3AF" style={{ fontSize: '12px' }} />
+          <YAxis stroke="#a3a3a3" style={{ fontSize: '12px' }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1F2937',
-              border: '1px solid #374151',
+              backgroundColor: '#0a0a0a',
+              border: '1px solid #262626',
               borderRadius: '8px',
-              color: '#F3F4F6',
+              color: '#fff',
             }}
             labelFormatter={(label) => formatDateLabel(label)}
             formatter={(value: number) => [value, 'Accesses']}
@@ -99,9 +99,9 @@ export function AnalyticsChart({ data, period }: AnalyticsChartProps) {
           <Line
             type="monotone"
             dataKey="count"
-            stroke="#3B82F6"
+            stroke="#b3f246"
             strokeWidth={2}
-            dot={{ fill: '#3B82F6', r: 4 }}
+            dot={{ fill: '#b3f246', r: 4 }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

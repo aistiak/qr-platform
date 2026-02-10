@@ -28,20 +28,20 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <div
-        className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+        className="bg-background border border-border rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="modal-title" className="text-xl font-bold mb-4 text-white">
+        <h2 id="modal-title" className="text-xl font-bold mb-4 text-foreground">
           {title}
         </h2>
-        <p className="text-gray-300 mb-6">{message}</p>
+        <p className="text-muted mb-6">{message}</p>
         <div className="flex gap-3 justify-end">
           <Button variant="secondary" onClick={onClose}>
             {cancelText}

@@ -1,4 +1,4 @@
-# Implementation Plan: QR Platform
+# Implementation Plan: QR Host
 
 **Branch**: `001-qr-platform` | **Date**: 2026-01-24 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-qr-platform/spec.md`

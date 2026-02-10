@@ -1,7 +1,7 @@
-# Research: QR Platform
+# Research: QR Host
 
 **Date**: 2026-01-24  
-**Feature**: QR Platform Implementation
+**Feature**: QR Host Implementation
 
 ## Technology Decisions
 

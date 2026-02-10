@@ -66,7 +66,7 @@ export function AdminQRCodeList() {
   if (qrCodes.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-300">No QR codes found.</p>
+        <p className="text-muted">No QR codes found.</p>
       </div>
     );
   }
@@ -78,7 +78,7 @@ export function AdminQRCodeList() {
       {qrCodes.map((qr) => (
         <div
           key={qr.id}
-          className="bg-gray-800 border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition-colors"
+          className="bg-white/[0.03] border border-border rounded-xl p-6 hover:border-white/20 transition-colors"
         >
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-shrink-0">
@@ -86,56 +86,56 @@ export function AdminQRCodeList() {
             </div>
             <div className="flex-1 space-y-3">
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">{qr.customName}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{qr.customName}</h3>
                 {qr.user && (
-                  <p className="text-sm text-gray-400">
-                    Created by: <span className="text-gray-300">{qr.user.name}</span> (
-                    <span className="text-gray-300">{qr.user.email}</span>)
+                  <p className="text-sm text-muted">
+                    Created by: <span className="text-foreground">{qr.user.name}</span> (
+                    <span className="text-foreground">{qr.user.email}</span>)
                   </p>
                 )}
               </div>
-              <div className="space-y-1 text-sm text-gray-300">
+              <div className="space-y-1 text-sm text-muted">
                 <p>
-                  <span className="font-medium text-white">Type:</span> {qr.targetType === 'url' ? 'URL' : 'Image'}
+                  <span className="font-medium text-foreground">Type:</span> {qr.targetType === 'url' ? 'URL' : 'Image'}
                 </p>
                 {qr.targetType === 'url' && qr.targetUrl && (
                   <p className="truncate">
-                    <span className="font-medium text-white">Target:</span>{' '}
+                    <span className="font-medium text-foreground">Target:</span>{' '}
                     <a
                       href={qr.targetUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-blue-300 hover:underline"
+                      className="text-accent hover:underline"
                     >
                       {qr.targetUrl}
                     </a>
                   </p>
                 )}
                 <p>
-                  <span className="font-medium text-white">Status:</span>{' '}
+                  <span className="font-medium text-foreground">Status:</span>{' '}
                   <span
                     className={`px-2 py-1 rounded text-xs ${
                       qr.status === 'active'
-                        ? 'bg-green-900 text-green-300'
+                        ? 'bg-green-900/50 text-green-300'
                         : qr.status === 'paused'
-                        ? 'bg-yellow-900 text-yellow-300'
-                        : 'bg-gray-700 text-gray-300'
+                        ? 'bg-yellow-900/50 text-yellow-300'
+                        : 'bg-white/10 text-muted'
                     }`}
                   >
                     {qr.status}
                   </span>
                 </p>
                 <p>
-                  <span className="font-medium text-white">Scans:</span> {qr.accessCount}
+                  <span className="font-medium text-foreground">Scans:</span> {qr.accessCount}
                 </p>
                 <p>
-                  <span className="font-medium text-white">Created:</span>{' '}
+                  <span className="font-medium text-foreground">Created:</span>{' '}
                   {new Date(qr.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <div className="pt-2">
                 <Link href={`/dashboard/qr/${qr.id}`}>
-                  <span className="text-blue-400 hover:text-blue-300 hover:underline text-sm">
+                  <span className="text-accent hover:underline text-sm">
                     View Details →
                   </span>
                 </Link>

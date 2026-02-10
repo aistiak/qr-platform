@@ -67,13 +67,13 @@ function SignInForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
+        <div className="bg-white/[0.03] rounded-xl border border-border p-8">
+          <h1 className="font-serif text-2xl font-semibold text-center mb-6 text-foreground">Sign In</h1>
 
           {success && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 mb-4">
+            <div className="p-4 bg-accent/10 border border-accent/30 rounded-lg text-accent mb-4 text-sm">
               {success}
             </div>
           )}
@@ -110,9 +110,9 @@ function SignInForm() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-muted">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-blue-600 hover:underline">
+            <Link href="/auth/signup" className="text-accent hover:underline">
               Sign up
             </Link>
           </p>
@@ -125,11 +125,11 @@ function SignInForm() {
 export default function SignInPage() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center p-4 bg-background">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
-            <p className="text-center text-gray-600">Loading...</p>
+          <div className="bg-white/[0.03] rounded-xl border border-border p-8">
+            <h1 className="font-serif text-2xl font-semibold text-center mb-6 text-foreground">Sign In</h1>
+            <p className="text-center text-muted">Loading...</p>
           </div>
         </div>
       </div>

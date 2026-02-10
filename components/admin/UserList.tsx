@@ -58,7 +58,7 @@ export function UserList() {
   if (users.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-300">No users found.</p>
+        <p className="text-muted">No users found.</p>
       </div>
     );
   }
@@ -67,33 +67,33 @@ export function UserList() {
     <div className="overflow-x-auto">
       <table className="w-full text-left">
         <thead>
-          <tr className="border-b border-gray-700">
-            <th className="pb-3 text-sm font-semibold text-gray-300">Name</th>
-            <th className="pb-3 text-sm font-semibold text-gray-300">Email</th>
-            <th className="pb-3 text-sm font-semibold text-gray-300">Role</th>
-            <th className="pb-3 text-sm font-semibold text-gray-300">QR Code Limit</th>
-            <th className="pb-3 text-sm font-semibold text-gray-300">Created</th>
-            <th className="pb-3 text-sm font-semibold text-gray-300">Actions</th>
+          <tr className="border-b border-border">
+            <th className="pb-3 text-sm font-semibold text-muted">Name</th>
+            <th className="pb-3 text-sm font-semibold text-muted">Email</th>
+            <th className="pb-3 text-sm font-semibold text-muted">Role</th>
+            <th className="pb-3 text-sm font-semibold text-muted">QR Code Limit</th>
+            <th className="pb-3 text-sm font-semibold text-muted">Created</th>
+            <th className="pb-3 text-sm font-semibold text-muted">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="border-b border-gray-700 hover:bg-gray-700/50">
-              <td className="py-3 text-gray-300">{user.name}</td>
-              <td className="py-3 text-gray-300">{user.email}</td>
+            <tr key={user.id} className="border-b border-border hover:bg-white/5">
+              <td className="py-3 text-foreground">{user.name}</td>
+              <td className="py-3 text-foreground">{user.email}</td>
               <td className="py-3">
                 <span
                   className={`px-2 py-1 rounded text-xs ${
                     user.role === 'admin'
-                      ? 'bg-purple-900 text-purple-300'
-                      : 'bg-gray-700 text-gray-300'
+                      ? 'bg-purple-900/50 text-purple-300'
+                      : 'bg-white/10 text-muted'
                   }`}
                 >
                   {user.role}
                 </span>
               </td>
-              <td className="py-3 text-gray-300">{user.qrCodeLimit}</td>
-              <td className="py-3 text-gray-300">
+              <td className="py-3 text-foreground">{user.qrCodeLimit}</td>
+              <td className="py-3 text-foreground">
                 {new Date(user.createdAt).toLocaleDateString()}
               </td>
               <td className="py-3">

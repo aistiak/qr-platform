@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: QR Platform API
+  title: QR Host API
   version: 1.0.0
   description: RESTful API for QR code platform
 

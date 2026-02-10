@@ -1,7 +1,7 @@
-# Data Model: QR Platform
+# Data Model: QR Host
 
 **Date**: 2026-01-24  
-**Feature**: QR Platform
+**Feature**: QR Host
 
 ## Database: MongoDB
 

@@ -16,25 +16,25 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 mb-6">
-          <h1 className="text-2xl font-bold text-white mb-2">Admin Dashboard</h1>
-          <p className="text-gray-300">Platform management and oversight</p>
+        <div className="bg-white/[0.03] rounded-xl border border-border p-6 mb-6">
+          <h1 className="font-serif text-2xl font-semibold text-foreground mb-2">Admin Dashboard</h1>
+          <p className="text-muted">Platform management and oversight</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
-            <h2 className="text-xl font-semibold mb-4 text-white">Users</h2>
-            <p className="text-gray-300 mb-4">View and manage all platform users</p>
+            <h2 className="text-xl font-semibold mb-4 text-foreground">Users</h2>
+            <p className="text-muted mb-4">View and manage all platform users</p>
             <Link href="/admin/users">
               <Button>Manage Users</Button>
             </Link>
           </Card>
 
           <Card>
-            <h2 className="text-xl font-semibold mb-4 text-white">QR Codes</h2>
-            <p className="text-gray-300 mb-4">View all QR codes across the platform</p>
+            <h2 className="text-xl font-semibold mb-4 text-foreground">QR Codes</h2>
+            <p className="text-muted mb-4">View all QR codes across the platform</p>
             <Link href="/admin/qr">
               <Button>View All QR Codes</Button>
             </Link>
