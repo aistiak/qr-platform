@@ -30,8 +30,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
               color: '#f3f4f6',
               border: '1px solid #4b5563',
             },
-            success: { iconTheme: { primary: '#22c55e' } },
-            error: { iconTheme: { primary: '#ef4444' } },
+            success: { iconTheme: { primary: '#22c55e', secondary: '#f3f4f6' } },
+            error: { iconTheme: { primary: '#ef4444', secondary: '#f3f4f6' } },
           }}
         />
       </QueryClientProvider>

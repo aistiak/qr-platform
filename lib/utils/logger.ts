@@ -7,7 +7,7 @@ type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 interface LogContext {
   userId?: string;
   action?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 class Logger {
