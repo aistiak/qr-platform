@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 import { getScanUrl } from '@/lib/utils/url';
 
 const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
@@ -96,7 +97,7 @@ export default function QRCodeDetailPage() {
 
       const data = await response.json();
       setQrCode(data);
-      alert('QR code name updated successfully');
+      toast.success('QR code name updated successfully');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update QR code');
     } finally {
@@ -202,7 +203,7 @@ export default function QRCodeDetailPage() {
         URL.revokeObjectURL(previewUrl);
       }
       setPreviewUrl(null);
-      alert('QR code target updated successfully');
+      toast.success('QR code target updated successfully');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update QR code target');
     } finally {

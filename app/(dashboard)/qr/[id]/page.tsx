@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 import { getScanUrl } from '@/lib/utils/url';
 
 interface QRCode {
@@ -74,7 +75,7 @@ export default function QRCodeDetailPage() {
 
       const data = await response.json();
       setQrCode(data);
-      alert('QR code name updated successfully');
+      toast.success('QR code name updated successfully');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update QR code');
     } finally {

@@ -6,6 +6,7 @@ import { QRCodeViewer } from './QRCodeViewer';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import toast from 'react-hot-toast';
 import {
   generateShareLink,
   generateSocialShareUrls,
@@ -99,7 +100,7 @@ export function QRCodeCard({
       onUpdate?.();
     } catch (error) {
       console.error('Update status error:', error);
-      alert('Failed to update QR code status');
+      toast.error('Failed to update QR code status');
     } finally {
       setLoading(false);
     }
@@ -120,7 +121,7 @@ export function QRCodeCard({
       onUpdate?.();
     } catch (error) {
       console.error('Delete error:', error);
-      alert('Failed to delete QR code');
+      toast.error('Failed to delete QR code');
     } finally {
       setLoading(false);
     }
@@ -146,7 +147,7 @@ export function QRCodeCard({
       setShowDownloadMenu(false);
     } catch (error) {
       console.error('Download error:', error);
-      alert('Failed to download QR code');
+      toast.error('Failed to download QR code');
     }
   };
 
@@ -199,16 +200,16 @@ export function QRCodeCard({
         case 'copy':
           const copied = await copyToClipboard(scanUrl);
           if (copied) {
-            alert('QR code URL copied to clipboard!');
+            toast.success('QR code URL copied to clipboard!');
           } else {
-            alert('Failed to copy QR code URL');
+            toast.error('Failed to copy QR code URL');
           }
           break;
       }
       setShowShareModal(false);
     } catch (error) {
       console.error('Share error:', error);
-      alert('Failed to share QR code');
+      toast.error('Failed to share QR code');
     }
   };
 

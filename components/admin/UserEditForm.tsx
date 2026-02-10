@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface User {
   id: string;
@@ -78,7 +79,7 @@ export function UserEditForm({ userId }: UserEditFormProps) {
 
       const data = await response.json();
       setUser(data);
-      alert('User updated successfully');
+      toast.success('User updated successfully');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update user');
