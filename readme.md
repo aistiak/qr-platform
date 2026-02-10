@@ -1,4 +1,4 @@
-# QR Platform
+# QR Host
 
 A full-stack QR code platform built with Next.js and MongoDB, allowing users to create, manage, and track QR codes with analytics.
 
