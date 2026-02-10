@@ -40,7 +40,7 @@ export function SignOutButton() {
     <button
       onClick={handleSignOut}
       disabled={isLoading}
-      className="p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="p-2 text-muted hover:text-foreground hover:bg-white/5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       title="Sign Out"
       aria-label="Sign Out"
       type="button"

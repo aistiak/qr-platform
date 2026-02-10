@@ -17,7 +17,7 @@ export default async function AdminUsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-4">
           <Link href="/admin">
@@ -27,9 +27,9 @@ export default async function AdminUsersPage() {
           </Link>
         </div>
 
-        <div className="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 mb-6">
-          <h1 className="text-2xl font-bold text-white mb-2">All Users</h1>
-          <p className="text-gray-300">Manage platform users and their QR code limits</p>
+        <div className="bg-white/[0.03] rounded-xl border border-border p-6 mb-6">
+          <h1 className="font-serif text-2xl font-semibold text-foreground mb-2">All Users</h1>
+          <p className="text-muted">Manage platform users and their QR code limits</p>
         </div>
 
         <Card>

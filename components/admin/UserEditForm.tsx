@@ -110,27 +110,27 @@ export function UserEditForm({ userId }: UserEditFormProps) {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
-          <Input id="name" value={user.name} disabled className="bg-gray-700" />
+          <label className="block text-sm font-medium text-muted mb-2">Name</label>
+          <Input id="name" value={user.name} disabled className="bg-white/5" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-          <Input id="email" value={user.email} disabled className="bg-gray-700" />
+          <label className="block text-sm font-medium text-muted mb-2">Email</label>
+          <Input id="email" value={user.email} disabled className="bg-white/5" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Role</label>
+          <label className="block text-sm font-medium text-muted mb-2">Role</label>
           <Input
             id="role"
             value={user.role}
             disabled
-            className="bg-gray-700"
+            className="bg-white/5"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-muted mb-2">
             QR Code Limit
           </label>
           <Input
@@ -139,20 +139,20 @@ export function UserEditForm({ userId }: UserEditFormProps) {
             min="1"
             value={qrCodeLimit}
             onChange={(e) => setQrCodeLimit(parseInt(e.target.value, 10) || 1)}
-            className="bg-gray-700"
+            className="bg-white/5"
           />
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1 text-sm text-muted">
             Maximum number of QR codes this user can create
           </p>
         </div>
 
-        <div className="space-y-2 text-sm text-gray-300">
+        <div className="space-y-2 text-sm text-muted">
           <p>
-            <span className="font-medium text-white">Created:</span>{' '}
+            <span className="font-medium text-foreground">Created:</span>{' '}
             {new Date(user.createdAt).toLocaleString()}
           </p>
           <p>
-            <span className="font-medium text-white">Last Updated:</span>{' '}
+            <span className="font-medium text-foreground">Last Updated:</span>{' '}
             {new Date(user.updatedAt).toLocaleString()}
           </p>
         </div>

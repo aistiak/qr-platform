@@ -213,7 +213,7 @@ export default function QRCodeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 p-4 flex items-center justify-center">
+      <div className="min-h-screen bg-background p-4 flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -221,7 +221,7 @@ export default function QRCodeDetailPage() {
 
   if (error || !qrCode) {
     return (
-      <div className="min-h-screen bg-gray-900 p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-4xl mx-auto">
           <Card>
             <ErrorMessage message={error || 'QR code not found'} />
@@ -239,7 +239,7 @@ export default function QRCodeDetailPage() {
   const scanUrl = getScanUrl(id);
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
           <Link href="/dashboard">
@@ -250,7 +250,7 @@ export default function QRCodeDetailPage() {
         </div>
 
         <Card className="mb-6">
-          <h1 className="text-2xl font-bold mb-6 text-white">QR Code Details</h1>
+          <h1 className="font-serif text-2xl font-semibold mb-6 text-foreground">QR Code Details</h1>
 
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row gap-6">
@@ -259,7 +259,7 @@ export default function QRCodeDetailPage() {
               </div>
               <div className="flex-1 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-muted mb-2">
                     Custom Name
                   </label>
                   <div className="flex gap-2">
@@ -277,11 +277,11 @@ export default function QRCodeDetailPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-muted mb-2">
                     Target Type
                   </label>
                   <div className="flex gap-4 mb-4">
-                    <label className="flex items-center text-gray-300">
+                    <label className="flex items-center text-muted">
                       <input
                         type="radio"
                         name="targetType"
@@ -300,7 +300,7 @@ export default function QRCodeDetailPage() {
                       />
                       URL
                     </label>
-                    <label className="flex items-center text-gray-300">
+                    <label className="flex items-center text-muted">
                       <input
                         type="radio"
                         name="targetType"
@@ -318,7 +318,7 @@ export default function QRCodeDetailPage() {
 
                   {targetType === 'url' && (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-muted mb-2">
                         Target URL
                       </label>
                       <div className="flex gap-2">
@@ -336,30 +336,30 @@ export default function QRCodeDetailPage() {
 
                   {targetType === 'image' && (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-muted mb-2">
                         Upload Image (JPEG or PNG, max 2MB)
                       </label>
                       <input
                         type="file"
                         accept="image/jpeg,image/png"
                         onChange={handleFileChange}
-                        className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mb-2"
+                        className="block w-full text-sm text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-foreground hover:file:bg-accent/90 mb-2"
                         disabled={uploadingImage}
                       />
-                      {uploadingImage && <p className="text-sm text-gray-300">Uploading...</p>}
+                      {uploadingImage && <p className="text-sm text-muted">Uploading...</p>}
                       {selectedFile && hostedImageId && (
-                        <p className="text-sm text-green-400">Image uploaded successfully</p>
+                        <p className="text-sm text-accent">Image uploaded successfully</p>
                       )}
                       {hostedImageId && !selectedFile && (
-                        <p className="text-sm text-gray-400">Current image is set</p>
+                        <p className="text-sm text-muted">Current image is set</p>
                       )}
                       {(previewUrl || hostedImageId) && !uploadingImage && (
                         <div className="mt-3">
-                          <p className="text-sm font-medium text-gray-300 mb-2">Preview</p>
+                          <p className="text-sm font-medium text-muted mb-2">Preview</p>
                           <img
                             src={previewUrl || `/api/images/${hostedImageId}`}
                             alt="Upload preview"
-                            className="max-h-48 w-auto rounded-lg border border-gray-600 object-contain bg-gray-800"
+                            className="max-h-48 w-auto rounded-lg border border-border object-contain bg-white/5"
                           />
                         </div>
                       )}
@@ -376,16 +376,16 @@ export default function QRCodeDetailPage() {
                   </Button>
                 </div>
 
-                       <div className="space-y-2 text-sm text-gray-300">
+                       <div className="space-y-2 text-sm text-muted">
                          <p>
-                           <span className="font-medium text-white">Status:</span>{' '}
+                           <span className="font-medium text-foreground">Status:</span>{' '}
                            <span
                              className={`px-2 py-1 rounded text-xs ${
                                qrCode.status === 'active'
-                                 ? 'bg-green-900 text-green-300'
+                                 ? 'bg-green-900/50 text-green-300'
                                  : qrCode.status === 'paused'
-                                 ? 'bg-yellow-900 text-yellow-300'
-                                 : 'bg-gray-700 text-gray-300'
+                                 ? 'bg-yellow-900/50 text-yellow-300'
+                                 : 'bg-white/10 text-muted'
                              }`}
                            >
                              {qrCode.status}
@@ -393,7 +393,7 @@ export default function QRCodeDetailPage() {
                          </p>
                          <div className="flex items-center gap-2">
                            <p>
-                             <span className="font-medium text-white">Total Scans:</span> {qrCode.accessCount}
+                             <span className="font-medium text-foreground">Total Scans:</span> {qrCode.accessCount}
                            </p>
                            <Link href={`/dashboard/qr/${id}/analytics`}>
                              <Button variant="secondary" size="sm">
@@ -402,11 +402,11 @@ export default function QRCodeDetailPage() {
                            </Link>
                          </div>
                   <p>
-                    <span className="font-medium text-white">Created:</span>{' '}
+                    <span className="font-medium text-foreground">Created:</span>{' '}
                     {new Date(qrCode.createdAt).toLocaleString()}
                   </p>
                   <p>
-                    <span className="font-medium text-white">Last Updated:</span>{' '}
+                    <span className="font-medium text-foreground">Last Updated:</span>{' '}
                     {new Date(qrCode.updatedAt).toLocaleString()}
                   </p>
                 </div>

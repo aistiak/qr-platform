@@ -57,7 +57,7 @@ export default function QRCodeAnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 p-4 flex items-center justify-center">
+      <div className="min-h-screen bg-background p-4 flex items-center justify-center">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -65,7 +65,7 @@ export default function QRCodeAnalyticsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-4xl mx-auto">
           <Card>
             <ErrorMessage message={error} />
@@ -82,7 +82,7 @@ export default function QRCodeAnalyticsPage() {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-gray-900 p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-4xl mx-auto">
           <Card>
             <ErrorMessage message="No analytics data available" />
@@ -98,7 +98,7 @@ export default function QRCodeAnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
           <Link href={`/dashboard/qr/${id}`}>
@@ -109,13 +109,13 @@ export default function QRCodeAnalyticsPage() {
         </div>
 
         <Card className="mb-6">
-          <h1 className="text-2xl font-bold mb-6 text-white">QR Code Analytics</h1>
+          <h1 className="font-serif text-2xl font-semibold mb-6 text-foreground">QR Code Analytics</h1>
 
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-3xl font-bold text-white">{analytics.total}</p>
-                <p className="text-gray-400">Total Accesses</p>
+                <p className="text-3xl font-bold text-foreground">{analytics.total}</p>
+                <p className="text-muted">Total Accesses</p>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -145,13 +145,13 @@ export default function QRCodeAnalyticsPage() {
 
           {analytics.total === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-400 text-lg mb-4">No accesses yet</p>
-              <p className="text-gray-500 text-sm">
+              <p className="text-muted text-lg mb-4">No accesses yet</p>
+              <p className="text-muted text-sm">
                 This QR code hasn&apos;t been scanned yet. Share it to start tracking analytics!
               </p>
             </div>
           ) : (
-            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <div className="bg-white/[0.03] rounded-xl p-4 border border-border">
               <AnalyticsChart data={analytics.dataPoints} period={analytics.period} />
             </div>
           )}

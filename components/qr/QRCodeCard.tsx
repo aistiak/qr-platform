@@ -215,41 +215,41 @@ export function QRCodeCard({
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-shadow">
+      <Card className="hover:border-white/20 transition-colors">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-shrink-0">
             <QRCodeViewer data={scanUrl} size={150} />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2 text-white">{customName}</h3>
-            <div className="space-y-1 text-sm text-gray-300">
+            <h3 className="text-lg font-semibold mb-2 text-foreground">{customName}</h3>
+            <div className="space-y-1 text-sm text-muted">
               <p>
-                <span className="font-medium text-white">Type:</span> {targetType === 'url' ? 'URL' : 'Image'}
+                <span className="font-medium text-foreground">Type:</span> {targetType === 'url' ? 'URL' : 'Image'}
               </p>
               {targetType === 'url' && targetUrl && (
                 <p className="truncate">
-                  <span className="font-medium text-white">Target:</span> {targetUrl}
+                  <span className="font-medium text-foreground">Target:</span> {targetUrl}
                 </p>
               )}
               <p>
-                <span className="font-medium text-white">Status:</span>{' '}
+                <span className="font-medium text-foreground">Status:</span>{' '}
                 <span
                   className={`px-2 py-1 rounded text-xs ${
                     status === 'active'
-                      ? 'bg-green-900 text-green-300'
+                      ? 'bg-green-900/50 text-green-300'
                       : status === 'paused'
-                      ? 'bg-yellow-900 text-yellow-300'
-                      : 'bg-gray-700 text-gray-300'
+                      ? 'bg-yellow-900/50 text-yellow-300'
+                      : 'bg-white/10 text-muted'
                   }`}
                 >
                   {status}
                 </span>
               </p>
               <p>
-                <span className="font-medium text-white">Scans:</span> {accessCount}
+                <span className="font-medium text-foreground">Scans:</span> {accessCount}
               </p>
               <p>
-                <span className="font-medium text-white">Created:</span>{' '}
+                <span className="font-medium text-foreground">Created:</span>{' '}
                 {new Date(createdAt).toLocaleDateString()}
               </p>
             </div>
@@ -277,13 +277,13 @@ export function QRCodeCard({
                     </Button>
                     {showDownloadMenu && (
                       <div
-                        className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10 min-w-[120px]"
+                        className="absolute top-full left-0 mt-1 bg-background border border-border rounded-lg shadow-xl z-10 min-w-[120px]"
                         role="menu"
                         aria-label="Download format options"
                       >
                         <button
                           onClick={() => handleDownload('png')}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded-t-lg transition-colors"
+                          className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-white/5 rounded-t-lg transition-colors"
                           role="menuitem"
                           aria-label="Download as PNG"
                         >
@@ -291,7 +291,7 @@ export function QRCodeCard({
                         </button>
                         <button
                           onClick={() => handleDownload('svg')}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded-b-lg transition-colors"
+                          className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-white/5 rounded-b-lg transition-colors"
                           role="menuitem"
                           aria-label="Download as SVG"
                         >
@@ -353,61 +353,61 @@ export function QRCodeCard({
       {/* Share Modal */}
       {showShareModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
           onClick={() => setShowShareModal(false)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="share-modal-title"
         >
           <div
-            className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+            className="bg-background border border-border rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 id="share-modal-title" className="text-xl font-bold mb-4 text-white">
+            <h2 id="share-modal-title" className="text-xl font-bold mb-4 text-foreground">
               Share QR Code
             </h2>
             <div className="space-y-2">
               {isWebShareSupported() && (
                 <button
                   onClick={() => handleShare('web')}
-                  className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                  className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
                 >
                   Share via Device
                 </button>
               )}
               <button
                 onClick={() => handleShare('copy')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Copy Link
               </button>
               <button
                 onClick={() => handleShare('twitter')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Share on Twitter
               </button>
               <button
                 onClick={() => handleShare('facebook')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Share on Facebook
               </button>
               <button
                 onClick={() => handleShare('linkedin')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Share on LinkedIn
               </button>
               <button
                 onClick={() => handleShare('whatsapp')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Share on WhatsApp
               </button>
               <button
                 onClick={() => handleShare('email')}
-                className="w-full text-left px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 transition-colors"
+                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
               >
                 Share via Email
               </button>

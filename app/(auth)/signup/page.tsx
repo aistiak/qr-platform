@@ -63,10 +63,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-background">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
+        <div className="bg-white/[0.03] rounded-xl border border-border p-8">
+          <h1 className="font-serif text-2xl font-semibold text-center mb-6 text-foreground">Create Account</h1>
 
           {error && <ErrorMessage message={error} className="mb-4" />}
 
@@ -113,9 +113,9 @@ export default function SignUpPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-muted">
             Already have an account?{' '}
-            <Link href="/auth/signin" className="text-blue-600 hover:underline">
+            <Link href="/auth/signin" className="text-accent hover:underline">
               Sign in
             </Link>
           </p>
