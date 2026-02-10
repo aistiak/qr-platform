@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   loading?: boolean;
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
@@ -25,8 +25,9 @@ export function Button({
   const baseClasses = `rounded-lg font-medium transition-colors ${sizeClasses[size]}`;
   
   const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:bg-gray-100',
+    primary: 'bg-accent text-accent-foreground hover:bg-accent/90 disabled:bg-accent/50',
+    secondary: 'bg-transparent border border-white text-white hover:bg-white/10 disabled:opacity-50',
+    outline: 'bg-transparent border border-border text-foreground hover:bg-white/5 disabled:opacity-50',
     danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
   };
 
