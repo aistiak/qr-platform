@@ -132,6 +132,100 @@ describe('Backend API integration', () => {
     expect(deleted.status).toBe(200);
   });
 
+  it('supports API token management and scoped QR platform API', async () => {
+    const client = request.agent(app);
+    await signUpAndSignIn(client, {
+      name: 'Token User',
+      email: 'token@example.com',
+      password: 'password123',
+    });
+
+    const tokenCreate = await client.post('/api/platform/tokens').send({
+      name: 'Integration token',
+      scopes: ['qr:create', 'qr:read', 'qr:list', 'qr:delete'],
+    });
+    expect(tokenCreate.status).toBe(201);
+    expect(tokenCreate.body.token).toContain('qpt_');
+    expect(tokenCreate.body.apiToken.name).toBe('Integration token');
+
+    const apiToken = tokenCreate.body.token as string;
+    const tokenId = tokenCreate.body.apiToken.id as string;
+
+    const tokenList = await client.get('/api/platform/tokens');
+    expect(tokenList.status).toBe(200);
+    expect(tokenList.body.total).toBe(1);
+    expect(Array.isArray(tokenList.body.availableScopes)).toBe(true);
+
+    const tokenDetails = await client.get(`/api/platform/tokens/${tokenId}`);
+    expect(tokenDetails.status).toBe(200);
+    expect(tokenDetails.body.id).toBe(tokenId);
+
+    const qrOne = await request(app)
+      .post('/api/platform/qrs')
+      .set('Authorization', `Bearer ${apiToken}`)
+      .send({
+        customName: 'API QR 1',
+        targetType: 'url',
+        targetUrl: 'https://example.com/1',
+      });
+    expect(qrOne.status).toBe(201);
+
+    const qrTwo = await request(app)
+      .post('/api/platform/qrs')
+      .set('Authorization', `Bearer ${apiToken}`)
+      .send({
+        customName: 'API QR 2',
+        targetType: 'url',
+        targetUrl: 'https://example.com/2',
+      });
+    expect(qrTwo.status).toBe(201);
+
+    const firstPage = await request(app)
+      .get('/api/platform/qrs?status=all&limit=1')
+      .set('Authorization', `Bearer ${apiToken}`);
+    expect(firstPage.status).toBe(200);
+    expect(firstPage.body.total).toBe(1);
+    expect(firstPage.body.hasMore).toBe(true);
+    expect(firstPage.body.nextCursor).toBeTruthy();
+
+    const secondPage = await request(app)
+      .get(`/api/platform/qrs?status=all&limit=1&cursor=${encodeURIComponent(firstPage.body.nextCursor)}`)
+      .set('Authorization', `Bearer ${apiToken}`);
+    expect(secondPage.status).toBe(200);
+    expect(secondPage.body.total).toBe(1);
+
+    const qrDetails = await request(app)
+      .get(`/api/platform/qrs/${qrOne.body.id}`)
+      .set('Authorization', `Bearer ${apiToken}`);
+    expect(qrDetails.status).toBe(200);
+    expect(qrDetails.body.id).toBe(qrOne.body.id);
+
+    const deleted = await request(app)
+      .delete(`/api/platform/qrs/${qrOne.body.id}`)
+      .set('Authorization', `Bearer ${apiToken}`);
+    expect(deleted.status).toBe(200);
+
+    const limitedTokenCreate = await client.post('/api/platform/tokens').send({
+      name: 'List only token',
+      scopes: ['qr:list'],
+    });
+    expect(limitedTokenCreate.status).toBe(201);
+
+    const listOnlyToken = limitedTokenCreate.body.token as string;
+    const forbiddenCreate = await request(app)
+      .post('/api/platform/qrs')
+      .set('Authorization', `Bearer ${listOnlyToken}`)
+      .send({
+        customName: 'Should fail',
+        targetType: 'url',
+        targetUrl: 'https://example.com/forbidden',
+      });
+    expect(forbiddenCreate.status).toBe(403);
+
+    const tokenDelete = await client.delete(`/api/platform/tokens/${tokenId}`);
+    expect(tokenDelete.status).toBe(200);
+  });
+
   it('handles image upload, image target QR, and scan redirect', async () => {
     const client = request.agent(app);
     await signUpAndSignIn(client, {

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/SignOutButton';
 import { Button } from '@/components/ui/Button';
-import { Home, Menu } from 'lucide-react';
+import { Home, KeyRound, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function Header() {
@@ -48,6 +48,13 @@ export function Header() {
                 >
                   <Home className="w-5 h-5" />
                 </Link>
+                <Link
+                  href="/dashboard/api-management"
+                  className="text-muted hover:text-foreground transition-colors p-2 rounded-lg hover:bg-white/5"
+                  title="API Management"
+                >
+                  <KeyRound className="w-5 h-5" />
+                </Link>
                 {session.user?.role === 'admin' && (
                   <Link href="/admin">
                     <Button variant="outline" size="sm">
@@ -87,6 +94,13 @@ export function Header() {
               <>
                 <Link href="/dashboard" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
                   Dashboard
+                </Link>
+                <Link
+                  href="/dashboard/api-management"
+                  className="py-2 text-foreground"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  API Management
                 </Link>
                 {session.user?.role === 'admin' && (
                   <Link href="/admin" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>

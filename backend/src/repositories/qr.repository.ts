@@ -28,6 +28,29 @@ export class QRRepository {
       .lean();
   }
 
+  async listByUserAndStatusCursor(
+    userId: string,
+    status: string,
+    limit: number,
+    cursor?: { createdAt: Date; id: string }
+  ) {
+    const query: Record<string, unknown> = { userId: new mongoose.Types.ObjectId(userId) };
+    query.status = status === 'all' ? { $ne: 'deleted' } : status;
+
+    if (cursor) {
+      query.$or = [
+        { createdAt: { $lt: cursor.createdAt } },
+        { createdAt: cursor.createdAt, _id: { $lt: new mongoose.Types.ObjectId(cursor.id) } },
+      ];
+    }
+
+    return QRCode.find(query)
+      .sort({ createdAt: -1, _id: -1 })
+      .limit(limit + 1)
+      .populate('hostedImageId', 'filename filePath')
+      .lean();
+  }
+
   async findByIdForUser(id: string, userId: string) {
     return QRCode.findOne({ _id: id, userId, status: { $ne: 'deleted' } })
       .populate('hostedImageId', 'filename filePath')

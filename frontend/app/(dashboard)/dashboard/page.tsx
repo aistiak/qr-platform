@@ -21,6 +21,9 @@ export default async function DashboardPage() {
               <p className="text-muted">Welcome, {session.user?.name || session.user?.email}</p>
             </div>
             <div className="flex gap-2">
+              <Link href="/dashboard/api-management">
+                <Button variant="outline">API Management</Button>
+              </Link>
               <Link href="/dashboard/qr/create">
                 <Button>Create QR Code</Button>
               </Link>

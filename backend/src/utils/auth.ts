@@ -1,7 +1,12 @@
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import type { ApiTokenScope } from '../models/ApiToken';
+import { UserRepository } from '../repositories/user.repository';
+import { ApiTokenService } from '../services/api-token.service';
 
 export const SESSION_COOKIE_NAME = 'qr_session';
+const apiTokenService = new ApiTokenService();
+const userRepository = new UserRepository();
 
 type SessionUser = {
   id: string;
@@ -57,6 +62,7 @@ export function attachSessionUser(req: Request, _res: Response, next: NextFuncti
     const user = verifySessionToken(token);
     if (user) {
       req.user = user;
+      req.authType = 'session';
     }
   }
   next();
@@ -68,6 +74,66 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     return;
   }
   next();
+}
+
+function getBearerToken(req: Request) {
+  const authorization = req.get('authorization');
+  if (!authorization?.startsWith('Bearer ')) {
+    return null;
+  }
+
+  return authorization.slice('Bearer '.length).trim() || null;
+}
+
+export async function requireApiTokenAuth(req: Request, res: Response, next: NextFunction) {
+  try {
+    const token = getBearerToken(req);
+    if (!token) {
+      res.status(401).json({ error: 'Bearer token required' });
+      return;
+    }
+
+    const authenticated = await apiTokenService.authenticate(token);
+    if (!authenticated) {
+      res.status(401).json({ error: 'Invalid or expired API token' });
+      return;
+    }
+
+    const user = await userRepository.findById(authenticated.userId);
+    if (!user) {
+      res.status(401).json({ error: 'Invalid API token user' });
+      return;
+    }
+
+    req.user = {
+      id: user._id.toString(),
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
+    req.apiToken = { id: authenticated.tokenId, scopes: authenticated.scopes };
+    req.authType = 'api_token';
+
+    next();
+  } catch {
+    res.status(401).json({ error: 'Invalid or expired API token' });
+  }
+}
+
+export function requireApiScope(scope: ApiTokenScope) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.apiToken || req.authType !== 'api_token') {
+      res.status(401).json({ error: 'API token authentication required' });
+      return;
+    }
+
+    if (!req.apiToken.scopes.includes(scope)) {
+      res.status(403).json({ error: `Missing required scope: ${scope}` });
+      return;
+    }
+
+    next();
+  };
 }
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
