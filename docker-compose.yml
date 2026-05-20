@@ -20,39 +20,46 @@ services:
     networks:
       - qr-platform-network
 
-  app:
+  backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
-    container_name: qr-platform-app
+    container_name: qr-platform-backend
     restart: unless-stopped
     ports:
-      - "${PORT:-3000}:3000"
-    env_file:
-      - .env.local
+      - "${BACKEND_PORT:-4000}:4000"
     environment:
       - NODE_ENV=production
+      - PORT=4000
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
       - MONGODB_URI=${MONGODB_URI:-mongodb://admin:adminpassword@mongodb:27017/qr-platform?authSource=admin}
-      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-change-this-secret-in-production}
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-${NEXTAUTH_URL:-http://localhost:3000}}
-      - APP_URL=${APP_URL:-${NEXTAUTH_URL:-http://localhost:3000}}
-    # Persist uploaded images so they survive container restarts
-    volumes:
-      - uploaded_images:/app/public/images
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
       - qr-platform-network
-    # Uses CMD from Dockerfile (node server.js)
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: qr-platform-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - BACKEND_INTERNAL_URL=http://backend:4000
+      - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:${BACKEND_PORT:-4000}}
+    depends_on:
+      - backend
+    networks:
+      - qr-platform-network
 
 volumes:
   mongodb_data:
     driver: local
   mongodb_config:
-    driver: local
-  uploaded_images:
     driver: local
 
 networks:

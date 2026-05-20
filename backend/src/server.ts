@@ -26,7 +26,7 @@ import {
 } from './utils/auth';
 import { uploadAndProcessImage } from './utils/image-upload';
 import { logger } from './utils/logger';
-import { getBaseUrl, getScanUrl } from './utils/url';
+import { getPublicAppUrl, getScanUrl } from './utils/url';
 import { signInSchema, signUpSchema, updateQRCodeSchema } from './utils/validation';
 
 dotenv.config();
@@ -55,6 +55,23 @@ function getImageRootDir() {
 function getImageAbsolutePath(filePath: string) {
   const normalized = filePath.replace(/^\/+/, '').replace(/^images\//, '');
   return path.join(getImageRootDir(), normalized);
+}
+
+async function sendHostedImageById(id: string, res: express.Response) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: 'Image not found' });
+  }
+
+  await connectDB();
+  const hostedImage = await HostedImage.findById(id);
+  if (!hostedImage) {
+    return res.status(404).json({ error: 'Image not found' });
+  }
+
+  const fileBuffer = await fs.readFile(getImageAbsolutePath(hostedImage.filePath));
+  res.setHeader('Content-Type', hostedImage.mimeType);
+  res.setHeader('Content-Length', fileBuffer.length.toString());
+  return res.send(fileBuffer);
 }
 
 app.get('/health', (_req, res) => {
@@ -478,17 +495,7 @@ app.post('/api/images', requireAuth, upload.single('file'), async (req, res) => 
 
 app.get('/api/images/:id', async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-    await connectDB();
-    const hostedImage = await HostedImage.findById(req.params.id);
-    if (!hostedImage) return res.status(404).json({ error: 'Image not found' });
-
-    const fileBuffer = await fs.readFile(getImageAbsolutePath(hostedImage.filePath));
-    res.setHeader('Content-Type', hostedImage.mimeType);
-    res.setHeader('Content-Length', fileBuffer.length.toString());
-    return res.send(fileBuffer);
+    return await sendHostedImageById(req.params.id, res);
   } catch {
     return res.status(404).json({ error: 'Image file not found' });
   }
@@ -501,7 +508,13 @@ app.get('/api/scan/:id', async (req, res) => {
     }
     await connectDB();
     const qrCode = await QRCode.findById(req.params.id).populate('hostedImageId', '_id filePath');
-    if (!qrCode || ['paused', 'archived', 'deleted'].includes(qrCode.status)) {
+
+    // If ID is a hosted image ID, serve it directly so /c/:id can be the final public URL.
+    if (!qrCode) {
+      return await sendHostedImageById(req.params.id, res);
+    }
+
+    if (['paused', 'archived', 'deleted'].includes(qrCode.status)) {
       return res.status(404).json({ error: 'Resource not found' });
     }
 
@@ -517,7 +530,7 @@ app.get('/api/scan/:id', async (req, res) => {
     if (qrCode.targetType === 'url' && qrCode.targetUrl) {
       redirectUrl = qrCode.targetUrl;
     } else if (qrCode.targetType === 'image' && qrCode.hostedImageId) {
-      redirectUrl = `${getBaseUrl(req)}/api/images/${(qrCode.hostedImageId as any)._id}`;
+      redirectUrl = `${getPublicAppUrl(req)}/c/${(qrCode.hostedImageId as any)._id}`;
     } else {
       return res.status(404).json({ error: 'Resource not found' });
     }

@@ -163,7 +163,12 @@ describe('Backend API integration', () => {
 
     const scan = await request(app).get(`/api/scan/${qrId}`);
     expect(scan.status).toBe(302);
-    expect(scan.headers.location).toContain(`/api/images/${hostedImageId}`);
+    expect(scan.headers.location).toContain(`/c/${hostedImageId}`);
+
+    // The redirected /c/:id path rewrites to /api/scan/:id, which should serve the image.
+    const scanImageId = await request(app).get(`/api/scan/${hostedImageId}`);
+    expect(scanImageId.status).toBe(200);
+    expect(scanImageId.headers['content-type']).toContain('image/png');
   });
 
   it('blocks admin endpoints for non-admin users', async () => {

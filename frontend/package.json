@@ -1,0 +1,52 @@
+{
+  "name": "qr-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "create-admin": "tsx --require dotenv/config scripts/create-admin-user.ts",
+    "create-indexes": "tsx scripts/create-indexes.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.56.0",
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^8.5.0",
+    "next": "^14.2.0",
+    "next-auth": "^5.0.0-beta.25",
+    "qrcode": "^1.5.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "sharp": "^0.33.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.23.0",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "recharts": "^2.10.3",
+    "lucide-react": "^0.344.0",
+    "react-hot-toast": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^20.14.0",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8.4.40",
+    "prettier": "^3.3.0",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.5.0"
+  }
+}

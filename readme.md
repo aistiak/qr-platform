@@ -140,6 +140,10 @@ See `.env.example` for required environment variables.
 [_] make ui better
 [_] add api support
 [_] email verification for email signup
+[_] add ai tool calling
+[_] payment option
+[_] rate limiting
+[_] store actual qr code image, instead of rendering
 ## License
 
 MIT

@@ -1,5 +1,14 @@
 import type { Request } from 'express';
 
+export function getPublicAppUrl(request?: Request): string {
+  return (
+    process.env.PUBLIC_APP_URL ||
+    process.env.FRONTEND_URL ||
+    process.env.APP_URL ||
+    (request ? `${request.protocol}://${request.get('host')}` : 'http://localhost:3000')
+  );
+}
+
 export function getBaseUrl(request?: Request): string {
   if (request) {
     const host = request.get('host');
@@ -13,5 +22,6 @@ export function getBaseUrl(request?: Request): string {
 }
 
 export function getScanUrl(qrCodeId: string, request?: Request): string {
-  return `${getBaseUrl(request)}/api/scan/${qrCodeId}`;
+  const publicBaseUrl = getPublicAppUrl(request);
+  return `${publicBaseUrl}/c/${qrCodeId}`;
 }
