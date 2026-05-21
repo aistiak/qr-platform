@@ -39,6 +39,13 @@ export function getBaseUrl(request?: NextRequest | Request): string {
 }
 
 /**
+ * Get the backend API base URL for platform/MCP docs and integrations.
+ */
+export function getBackendUrl(): string {
+  return process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+}
+
+/**
  * Generate a scan URL for a QR code
  */
 export function getScanUrl(qrCodeId: string, request?: NextRequest | Request): string {

@@ -1,4 +1,5 @@
 import { StripeStyleDocs } from '@/components/docs/StripeStyleDocs';
+import { getBackendUrl } from '@/lib/utils/url';
 
 export const metadata = {
   title: 'API Docs | QR Host',
@@ -6,7 +7,5 @@ export const metadata = {
 };
 
 export default function DocsPage() {
-  return (
-    <StripeStyleDocs />
-  );
+  return <StripeStyleDocs backendUrl={getBackendUrl()} />;
 }
