@@ -9,10 +9,8 @@ import { Modal } from '@/components/ui/Modal';
 import toast from 'react-hot-toast';
 import {
   generateShareLink,
-  generateSocialShareUrls,
-  shareContent,
+  copyQRCodeImageToClipboard,
   copyToClipboard,
-  isWebShareSupported,
 } from '@/lib/utils/share';
 import { getScanUrl } from '@/lib/utils/url';
 
@@ -41,25 +39,30 @@ export function QRCodeCard({
 }: QRCodeCardProps) {
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
+  const [copying, setCopying] = useState(false);
+  const [showCopyMenu, setShowCopyMenu] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+  const copyMenuRef = useRef<HTMLDivElement>(null);
   const downloadMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close download menu when clicking outside
+  // Close menus when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      if (copyMenuRef.current && !copyMenuRef.current.contains(event.target as Node)) {
+        setShowCopyMenu(false);
+      }
       if (downloadMenuRef.current && !downloadMenuRef.current.contains(event.target as Node)) {
         setShowDownloadMenu(false);
       }
     }
 
-    if (showDownloadMenu) {
+    if (showCopyMenu || showDownloadMenu) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }
-  }, [showDownloadMenu]);
+  }, [showCopyMenu, showDownloadMenu]);
 
   // Generate scan URL using utility
   const scanUrl = getScanUrl(id);
@@ -151,65 +154,30 @@ export function QRCodeCard({
     }
   };
 
-  const handleShare = async (method?: 'web' | 'twitter' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy') => {
-    const scanUrl = generateShareLink(id);
-    const shareUrls = generateSocialShareUrls(scanUrl, customName, `Check out this QR code: ${customName}`);
-
-    if (!method) {
-      // Try Web Share API first
-      if (isWebShareSupported()) {
-        const shared = await shareContent({
-          title: customName,
-          text: `Check out this QR code: ${customName}`,
-          url: scanUrl,
-        });
-        if (shared) {
-          setShowShareModal(false);
-          return;
+  const handleCopy = async (type: 'image' | 'link') => {
+    setCopying(true);
+    try {
+      if (type === 'image') {
+        const copied = await copyQRCodeImageToClipboard(id);
+        if (copied) {
+          toast.success('QR code image copied to clipboard!');
+        } else {
+          toast.error('Failed to copy QR code image');
+        }
+      } else {
+        const copied = await copyToClipboard(generateShareLink(id));
+        if (copied) {
+          toast.success('QR code URL copied to clipboard!');
+        } else {
+          toast.error('Failed to copy QR code URL');
         }
       }
-      // Show share modal if Web Share API not available or failed
-      setShowShareModal(true);
-      return;
-    }
-
-    try {
-      switch (method) {
-        case 'web':
-          await shareContent({
-            title: customName,
-            text: `Check out this QR code: ${customName}`,
-            url: scanUrl,
-          });
-          break;
-        case 'twitter':
-          window.open(shareUrls.twitter, '_blank', 'width=600,height=400');
-          break;
-        case 'facebook':
-          window.open(shareUrls.facebook, '_blank', 'width=600,height=400');
-          break;
-        case 'linkedin':
-          window.open(shareUrls.linkedin, '_blank', 'width=600,height=400');
-          break;
-        case 'whatsapp':
-          window.open(shareUrls.whatsapp, '_blank');
-          break;
-        case 'email':
-          window.location.href = shareUrls.email;
-          break;
-        case 'copy':
-          const copied = await copyToClipboard(scanUrl);
-          if (copied) {
-            toast.success('QR code URL copied to clipboard!');
-          } else {
-            toast.error('Failed to copy QR code URL');
-          }
-          break;
-      }
-      setShowShareModal(false);
+      setShowCopyMenu(false);
     } catch (error) {
-      console.error('Share error:', error);
-      toast.error('Failed to share QR code');
+      console.error('Copy error:', error);
+      toast.error('Failed to copy QR code');
+    } finally {
+      setCopying(false);
     }
   };
 
@@ -301,15 +269,41 @@ export function QRCodeCard({
                       </div>
                     )}
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
-                    onClick={() => handleShare()}
-                    disabled={loading}
-                  >
-                    Share
-                  </Button>
+                  <div className="relative" ref={copyMenuRef}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
+                      onClick={() => setShowCopyMenu(!showCopyMenu)}
+                      disabled={loading || copying}
+                    >
+                      Copy
+                    </Button>
+                    {showCopyMenu && (
+                      <div
+                        className="absolute top-full left-0 mt-1 bg-background border border-border rounded-lg shadow-xl z-10 min-w-[120px]"
+                        role="menu"
+                        aria-label="Copy options"
+                      >
+                        <button
+                          onClick={() => handleCopy('image')}
+                          className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-white/5 rounded-t-lg transition-colors"
+                          role="menuitem"
+                          aria-label="Copy QR code image"
+                        >
+                          Copy Image
+                        </button>
+                        <button
+                          onClick={() => handleCopy('link')}
+                          className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-white/5 rounded-b-lg transition-colors"
+                          role="menuitem"
+                          aria-label="Copy QR code link"
+                        >
+                          Copy Link
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -355,76 +349,6 @@ export function QRCodeCard({
         variant="danger"
       />
 
-      {/* Share Modal */}
-      {showShareModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-          onClick={() => setShowShareModal(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="share-modal-title"
-        >
-          <div
-            className="bg-background border border-border rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 id="share-modal-title" className="text-xl font-bold mb-4 text-foreground">
-              Share QR Code
-            </h2>
-            <div className="space-y-2">
-              {isWebShareSupported() && (
-                <button
-                  onClick={() => handleShare('web')}
-                  className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-                >
-                  Share via Device
-                </button>
-              )}
-              <button
-                onClick={() => handleShare('copy')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Copy Link
-              </button>
-              <button
-                onClick={() => handleShare('twitter')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Share on Twitter
-              </button>
-              <button
-                onClick={() => handleShare('facebook')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Share on Facebook
-              </button>
-              <button
-                onClick={() => handleShare('linkedin')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Share on LinkedIn
-              </button>
-              <button
-                onClick={() => handleShare('whatsapp')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Share on WhatsApp
-              </button>
-              <button
-                onClick={() => handleShare('email')}
-                className="w-full text-left px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-foreground transition-colors"
-              >
-                Share via Email
-              </button>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <Button variant="secondary" onClick={() => setShowShareModal(false)}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

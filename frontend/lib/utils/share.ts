@@ -2,14 +2,16 @@
  * Share utility functions for QR codes
  */
 
+import { getScanUrl } from './url';
+
 export interface ShareOptions {
   title: string;
   text: string;
-  url: string;
+  url?: string;
   files?: File[];
 }
 
-import { getScanUrl } from './url';
+export type ShareImageResult = 'shared' | 'copied' | 'failed';
 
 /**
  * Generate a shareable link for a QR code
@@ -58,17 +60,43 @@ export function isWebShareSupported(): boolean {
 /**
  * Share using Web Share API with fallback
  */
+export function getQRCodeImageFilename(customName: string): string {
+  return `qr-code-${customName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+}
+
+export async function fetchQRCodeImageBlob(qrCodeId: string): Promise<Blob> {
+  const response = await fetch(`/api/app/qr/${qrCodeId}/download?format=png`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch QR code image');
+  }
+  return response.blob();
+}
+
+export async function fetchQRCodeImageFile(qrCodeId: string, filename: string): Promise<File> {
+  const blob = await fetchQRCodeImageBlob(qrCodeId);
+  return new File([blob], filename, { type: blob.type || 'image/png' });
+}
+
+export function isWebShareFilesSupported(files: File[]): boolean {
+  return (
+    isWebShareSupported() &&
+    typeof navigator.canShare === 'function' &&
+    navigator.canShare({ files })
+  );
+}
+
 export async function shareContent(options: ShareOptions): Promise<boolean> {
   if (isWebShareSupported()) {
     try {
       const shareData: ShareData = {
         title: options.title,
         text: options.text,
-        url: options.url,
       };
 
-      if (options.files && navigator.canShare && navigator.canShare({ files: options.files })) {
+      if (options.files && isWebShareFilesSupported(options.files)) {
         shareData.files = options.files;
+      } else if (options.url) {
+        shareData.url = options.url;
       }
 
       await navigator.share(shareData);
@@ -81,6 +109,55 @@ export async function shareContent(options: ShareOptions): Promise<boolean> {
     }
   }
   return false;
+}
+
+export async function copyImageToClipboard(blob: Blob): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.write) {
+      const type = blob.type || 'image/png';
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [type]: blob,
+        }),
+      ]);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Copy image to clipboard error:', error);
+    return false;
+  }
+}
+
+export async function copyQRCodeImageToClipboard(qrCodeId: string): Promise<boolean> {
+  const blob = await fetchQRCodeImageBlob(qrCodeId);
+  return copyImageToClipboard(blob);
+}
+
+export async function shareQRCodeImage(
+  qrCodeId: string,
+  filename: string,
+  options: { title: string; text: string }
+): Promise<ShareImageResult> {
+  const file = await fetchQRCodeImageFile(qrCodeId, filename);
+
+  if (isWebShareFilesSupported([file])) {
+    const shared = await shareContent({
+      title: options.title,
+      text: options.text,
+      files: [file],
+    });
+    if (shared) {
+      return 'shared';
+    }
+  }
+
+  const copied = await copyImageToClipboard(file);
+  return copied ? 'copied' : 'failed';
+}
+
+export function generateEmailShareUrl(title: string, text: string): string {
+  return `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`;
 }
 
 /**

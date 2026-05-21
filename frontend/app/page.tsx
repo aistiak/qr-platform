@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
@@ -23,26 +24,40 @@ export default async function Home() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 max-w-5xl mx-auto">
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium text-foreground leading-[1.15] max-w-3xl">
-          When you need a link everywhere,
-          <br />
-          <span className="font-semibold italic">we help you get there.</span>
-        </h1>
-        <p className="mt-6 text-lg sm:text-xl text-muted max-w-xl leading-relaxed">
-          Create, manage, and track QR codes with ease. Dynamic links, real-time
-          analytics, and bulk generation—all in one place.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Link href="/auth/signup">
-            <Button size="lg" className="min-w-[160px]">
-              Get started
-            </Button>
-          </Link>
-          <Link href="/auth/signin">
-            <Button variant="secondary" size="lg" className="min-w-[160px]">
-              Sign In
-            </Button>
-          </Link>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium text-foreground leading-[1.15]">
+              When you need a link everywhere,
+              <br />
+              <span className="font-semibold italic">we help you get there.</span>
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-muted max-w-xl leading-relaxed">
+              Create, manage, and track QR codes with ease. Dynamic links, real-time
+              analytics, and bulk generation—all in one place.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link href="/auth/signup">
+                <Button size="lg" className="min-w-[160px]">
+                  Get started
+                </Button>
+              </Link>
+              <Link href="/auth/signin">
+                <Button variant="secondary" size="lg" className="min-w-[160px]">
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <div className="relative aspect-square w-full max-w-md mx-auto lg:max-w-none">
+            <Image
+              src="/images/hero-qr.jpeg"
+              alt="Stylized QR code with glowing blue digital design"
+              fill
+              priority
+              className="object-contain rounded-xl"
+              sizes="(max-width: 1024px) 384px, 50vw"
+            />
+          </div>
         </div>
       </section>
 
