@@ -41,6 +41,11 @@ export function Header() {
           <nav className="hidden sm:flex items-center gap-6">
             {session ? (
               <>
+                <Link href="/docs">
+                  <Button variant="outline" size="sm">
+                    Docs
+                  </Button>
+                </Link>
                 <Link
                   href="/dashboard"
                   className="text-muted hover:text-foreground transition-colors p-2 rounded-lg hover:bg-white/5"
@@ -66,6 +71,11 @@ export function Header() {
               </>
             ) : (
               <>
+                <Link href="/docs">
+                  <Button variant="outline" size="sm">
+                    Docs
+                  </Button>
+                </Link>
                 <Link href="/auth/signin">
                   <Button variant="secondary" size="sm">
                     Sign In
@@ -92,6 +102,9 @@ export function Header() {
           <div className="sm:hidden py-4 border-t border-border flex flex-col gap-2">
             {session ? (
               <>
+                <Link href="/docs" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Docs
+                </Link>
                 <Link href="/dashboard" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
                   Dashboard
                 </Link>
@@ -111,6 +124,9 @@ export function Header() {
               </>
             ) : (
               <>
+                <Link href="/docs" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Docs
+                </Link>
                 <Link href="/auth/signin" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
                   Sign In
                 </Link>

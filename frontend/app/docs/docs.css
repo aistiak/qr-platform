@@ -1,0 +1,11 @@
+.docs-grid {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .docs-grid {
+    grid-template-columns: 1fr;
+  }
+}
