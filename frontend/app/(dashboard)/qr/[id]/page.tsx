@@ -41,7 +41,7 @@ export default function QRCodeDetailPage() {
   const fetchQRCode = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/qr/${id}`);
+      const response = await fetch(`/api/app/qr/${id}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -62,7 +62,7 @@ export default function QRCodeDetailPage() {
 
     setSaving(true);
     try {
-      const response = await fetch(`/api/qr/${id}`, {
+      const response = await fetch(`/api/app/qr/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customName }),

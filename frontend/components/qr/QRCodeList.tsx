@@ -39,7 +39,7 @@ export function QRCodeList() {
   const fetchQRCodes = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/qr?status=all');
+      const response = await fetch('/api/app/qr?status=all');
       const data = await response.json();
 
       if (!response.ok) {

@@ -39,7 +39,7 @@ export default function QRCodeAnalyticsPage() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/qr/${id}/analytics?period=${period}`);
+      const response = await fetch(`/api/app/qr/${id}/analytics?period=${period}`);
       const data = await response.json();
 
       if (!response.ok) {

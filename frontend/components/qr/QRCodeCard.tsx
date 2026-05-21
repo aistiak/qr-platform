@@ -87,7 +87,7 @@ export function QRCodeCard({
   const updateStatus = async (newStatus: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/qr/${id}`, {
+      const response = await fetch(`/api/app/qr/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -109,7 +109,7 @@ export function QRCodeCard({
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/qr/${id}`, {
+      const response = await fetch(`/api/app/qr/${id}`, {
         method: 'DELETE',
       });
 
@@ -129,7 +129,7 @@ export function QRCodeCard({
 
   const handleDownload = async (format: 'png' | 'svg' = 'png') => {
     try {
-      const response = await fetch(`/api/qr/${id}/download?format=${format}`);
+      const response = await fetch(`/api/app/qr/${id}/download?format=${format}`);
       if (!response.ok) {
         throw new Error('Failed to download QR code');
       }

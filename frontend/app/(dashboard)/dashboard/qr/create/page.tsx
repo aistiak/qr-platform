@@ -21,7 +21,7 @@ export default function CreateQRCodePage() {
     setError('');
 
     try {
-      const response = await fetch('/api/qr', {
+      const response = await fetch('/api/app/qr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

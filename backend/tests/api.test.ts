@@ -91,7 +91,7 @@ describe('Backend API integration', () => {
       password: 'password123',
     });
 
-    const created = await client.post('/api/qr').send({
+    const created = await client.post('/api/app/qr').send({
       customName: 'My QR',
       targetType: 'url',
       targetUrl: 'https://example.com',
@@ -99,36 +99,36 @@ describe('Backend API integration', () => {
     expect(created.status).toBe(201);
     const qrId = created.body.id as string;
 
-    const list = await client.get('/api/qr?status=all');
+    const list = await client.get('/api/app/qr?status=all');
     expect(list.status).toBe(200);
     expect(list.body.total).toBe(1);
 
-    const details = await client.get(`/api/qr/${qrId}`);
+    const details = await client.get(`/api/app/qr/${qrId}`);
     expect(details.status).toBe(200);
     expect(details.body.targetUrl).toBe('https://example.com');
 
-    const updated = await client.patch(`/api/qr/${qrId}`).send({ customName: 'Updated QR' });
+    const updated = await client.patch(`/api/app/qr/${qrId}`).send({ customName: 'Updated QR' });
     expect(updated.status).toBe(200);
     expect(updated.body.customName).toBe('Updated QR');
 
-    const analytics = await client.get(`/api/qr/${qrId}/analytics?period=day`);
+    const analytics = await client.get(`/api/app/qr/${qrId}/analytics?period=day`);
     expect(analytics.status).toBe(200);
     expect(analytics.body.period).toBe('day');
 
-    const downloaded = await client.get(`/api/qr/${qrId}/download?format=png`);
+    const downloaded = await client.get(`/api/app/qr/${qrId}/download?format=png`);
     expect(downloaded.status).toBe(200);
     expect(downloaded.headers['content-type']).toContain('image/png');
 
-    const paused = await client.post(`/api/qr/${qrId}/pause`);
+    const paused = await client.post(`/api/app/qr/${qrId}/pause`);
     expect(paused.status).toBe(200);
 
-    const resumed = await client.patch(`/api/qr/${qrId}`).send({ status: 'active' });
+    const resumed = await client.patch(`/api/app/qr/${qrId}`).send({ status: 'active' });
     expect(resumed.status).toBe(200);
 
-    const archived = await client.post(`/api/qr/${qrId}/archive`);
+    const archived = await client.post(`/api/app/qr/${qrId}/archive`);
     expect(archived.status).toBe(200);
 
-    const deleted = await client.delete(`/api/qr/${qrId}`);
+    const deleted = await client.delete(`/api/app/qr/${qrId}`);
     expect(deleted.status).toBe(200);
   });
 
@@ -252,7 +252,7 @@ describe('Backend API integration', () => {
     expect(upload.status).toBe(201);
     const hostedImageId = upload.body.id as string;
 
-    const createQr = await client.post('/api/qr').send({
+    const createQr = await client.post('/api/app/qr').send({
       customName: 'Image QR',
       targetType: 'image',
       hostedImageId,

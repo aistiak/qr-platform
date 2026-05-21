@@ -10,7 +10,7 @@ import { scanRouter } from './scan.routes';
 export const apiRouter = Router();
 
 apiRouter.use('/auth', authRouter);
-apiRouter.use('/qr', qrRouter);
+apiRouter.use('/app/qr', qrRouter);
 apiRouter.use('/images', imageRouter);
 apiRouter.use('/scan', scanRouter);
 apiRouter.use('/admin', adminRouter);
