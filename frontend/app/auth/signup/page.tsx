@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { GoogleSignInSection } from '@/components/auth/GoogleSignInButton';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -69,6 +70,8 @@ export default function SignUpPage() {
           <h1 className="font-serif text-2xl font-semibold text-center mb-6 text-foreground">Create Account</h1>
 
           {error && <ErrorMessage message={error} className="mb-4" />}
+
+          <GoogleSignInSection />
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input

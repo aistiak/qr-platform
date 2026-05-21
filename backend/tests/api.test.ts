@@ -348,4 +348,74 @@ describe('Backend API integration', () => {
     expect(qr.body.qrCodes[0].user.email).toBe('usera@example.com');
     expect(admin._id).toBeDefined();
   });
+
+  it('returns auth providers status', async () => {
+    const response = await request(app).get('/api/auth/providers');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ google: false });
+  });
+
+  it('creates and signs in users via Google profile', async () => {
+    const { AuthService } = await import('../src/services/auth.service');
+    const authService = new AuthService();
+
+    const sessionUser = await authService.signInWithGoogle({
+      googleId: 'google-user-123',
+      email: 'google@example.com',
+      name: 'Google User',
+      image: 'https://example.com/avatar.png',
+    });
+
+    expect(sessionUser.email).toBe('google@example.com');
+    expect(sessionUser.name).toBe('Google User');
+
+    const storedUser = await User.findOne({ email: 'google@example.com' });
+    expect(storedUser?.authProvider).toBe('google');
+    expect(storedUser?.googleId).toBe('google-user-123');
+    expect(storedUser?.passwordHash).toBeUndefined();
+  });
+
+  it('links Google account to existing credentials user', async () => {
+    const { AuthService } = await import('../src/services/auth.service');
+    const authService = new AuthService();
+
+    await User.create({
+      name: 'Existing User',
+      email: 'existing@example.com',
+      passwordHash: await bcrypt.hash('password123', 10),
+      authProvider: 'credentials',
+      role: 'user',
+      qrCodeLimit: 20,
+    });
+
+    const sessionUser = await authService.signInWithGoogle({
+      googleId: 'google-existing-123',
+      email: 'existing@example.com',
+      name: 'Existing User',
+    });
+
+    expect(sessionUser.email).toBe('existing@example.com');
+
+    const storedUser = await User.findOne({ email: 'existing@example.com' });
+    expect(storedUser?.googleId).toBe('google-existing-123');
+    expect(storedUser?.passwordHash).toBeDefined();
+  });
+
+  it('rejects credentials sign-in for Google-only users', async () => {
+    await User.create({
+      name: 'Google Only',
+      email: 'googleonly@example.com',
+      authProvider: 'google',
+      googleId: 'google-only-123',
+      role: 'user',
+      qrCodeLimit: 20,
+    });
+
+    const response = await request(app)
+      .post('/api/auth/signin')
+      .send({ email: 'googleonly@example.com', password: 'password123' });
+
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Please sign in with Google');
+  });
 });

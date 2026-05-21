@@ -23,9 +23,9 @@ export default async function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 max-w-5xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div>
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+          <div className="order-2 md:order-1">
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium text-foreground leading-[1.15]">
               When you need a link everywhere,
               <br />
@@ -33,7 +33,7 @@ export default async function Home() {
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-muted max-w-xl leading-relaxed">
               Create, manage, and track QR codes with ease. Dynamic links, real-time
-              analytics, and bulk generation—all in one place.
+              analytics, and AI/MCP Support—all in one place.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link href="/auth/signup">
@@ -48,7 +48,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <div className="relative aspect-square w-full max-w-md mx-auto lg:max-w-none">
+          <div className="relative aspect-square w-full max-w-[280px] sm:max-w-xs md:max-w-none mx-auto order-1 md:order-2">
             <Image
               src="/images/hero-qr.jpeg"
               alt="Stylized QR code with glowing blue digital design"

@@ -9,6 +9,14 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
+import { GoogleSignInSection } from '@/components/auth/GoogleSignInButton';
+
+const OAUTH_ERRORS: Record<string, string> = {
+  google_denied: 'Google sign-in was cancelled.',
+  invalid_state: 'Sign-in session expired. Please try again.',
+  google_profile: 'Could not retrieve your Google profile. Please try again.',
+  google_failed: 'Google sign-in failed. Please try again.',
+};
 
 function SignInForm() {
   const searchParams = useSearchParams();
@@ -25,6 +33,11 @@ function SignInForm() {
   useEffect(() => {
     if (searchParams.get('registered') === 'true') {
       setSuccess('Account created successfully! Please sign in.');
+    }
+
+    const oauthError = searchParams.get('error');
+    if (oauthError) {
+      setError(OAUTH_ERRORS[oauthError] || 'Sign-in failed. Please try again.');
     }
   }, [searchParams]);
 
@@ -83,6 +96,8 @@ function SignInForm() {
           )}
 
           {error && <ErrorMessage message={error} className="mb-4" />}
+
+          <GoogleSignInSection />
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
