@@ -62,7 +62,7 @@ export function ApiTokenManager() {
   const fetchTokens = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/platform/tokens', { credentials: 'include' });
+      const response = await fetch('/api/app/platform/tokens', { credentials: 'include' });
       const data = await readResponsePayload(response);
       if (!response.ok) {
         throw new Error(data.error || 'Failed to load API tokens');
@@ -123,7 +123,7 @@ export function ApiTokenManager() {
         payload.expiresAt = expiresAt;
       }
 
-      const response = await fetch('/api/platform/tokens', {
+      const response = await fetch('/api/app/platform/tokens', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -152,7 +152,7 @@ export function ApiTokenManager() {
   const onDeleteToken = async (tokenId: string) => {
     setDeletingId(tokenId);
     try {
-      const response = await fetch(`/api/platform/tokens/${tokenId}`, {
+      const response = await fetch(`/api/app/platform/tokens/${tokenId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -176,7 +176,7 @@ export function ApiTokenManager() {
   const onLoadDetails = async (tokenId: string) => {
     setDetailsLoadingId(tokenId);
     try {
-      const response = await fetch(`/api/platform/tokens/${tokenId}`, {
+      const response = await fetch(`/api/app/platform/tokens/${tokenId}`, {
         credentials: 'include',
       });
       const data = await readResponsePayload(response);

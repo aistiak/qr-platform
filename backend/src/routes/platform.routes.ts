@@ -1,17 +1,10 @@
 import { Router } from 'express';
-import { ApiTokenController } from '../controllers/api-token.controller';
 import { PlatformQRController } from '../controllers/platform-qr.controller';
-import { requireApiScope, requireApiTokenAuth, requireAuth } from '../utils/auth';
+import { requireApiScope, requireApiTokenAuth } from '../utils/auth';
 
-const apiTokenController = new ApiTokenController();
 const platformQRController = new PlatformQRController();
 
 export const platformRouter = Router();
-
-platformRouter.post('/tokens', requireAuth, apiTokenController.create.bind(apiTokenController));
-platformRouter.get('/tokens', requireAuth, apiTokenController.list.bind(apiTokenController));
-platformRouter.get('/tokens/:id', requireAuth, apiTokenController.details.bind(apiTokenController));
-platformRouter.delete('/tokens/:id', requireAuth, apiTokenController.remove.bind(apiTokenController));
 
 platformRouter.use('/qrs', requireApiTokenAuth);
 platformRouter.post(

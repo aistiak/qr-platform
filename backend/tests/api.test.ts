@@ -140,7 +140,7 @@ describe('Backend API integration', () => {
       password: 'password123',
     });
 
-    const tokenCreate = await client.post('/api/platform/tokens').send({
+    const tokenCreate = await client.post('/api/app/platform/tokens').send({
       name: 'Integration token',
       scopes: ['qr:create', 'qr:read', 'qr:list', 'qr:delete'],
     });
@@ -151,14 +151,23 @@ describe('Backend API integration', () => {
     const apiToken = tokenCreate.body.token as string;
     const tokenId = tokenCreate.body.apiToken.id as string;
 
-    const tokenList = await client.get('/api/platform/tokens');
+    const tokenList = await client.get('/api/app/platform/tokens');
     expect(tokenList.status).toBe(200);
     expect(tokenList.body.total).toBe(1);
     expect(Array.isArray(tokenList.body.availableScopes)).toBe(true);
 
-    const tokenDetails = await client.get(`/api/platform/tokens/${tokenId}`);
+    const tokenDetails = await client.get(`/api/app/platform/tokens/${tokenId}`);
     expect(tokenDetails.status).toBe(200);
     expect(tokenDetails.body.id).toBe(tokenId);
+
+    const apiTokenCannotIssueToken = await request(app)
+      .post('/api/app/platform/tokens')
+      .set('Authorization', `Bearer ${apiToken}`)
+      .send({
+        name: 'Should fail',
+        scopes: ['qr:list'],
+      });
+    expect(apiTokenCannotIssueToken.status).toBe(401);
 
     const qrOne = await request(app)
       .post('/api/platform/qrs')
@@ -205,7 +214,7 @@ describe('Backend API integration', () => {
       .set('Authorization', `Bearer ${apiToken}`);
     expect(deleted.status).toBe(200);
 
-    const limitedTokenCreate = await client.post('/api/platform/tokens').send({
+    const limitedTokenCreate = await client.post('/api/app/platform/tokens').send({
       name: 'List only token',
       scopes: ['qr:list'],
     });
@@ -222,7 +231,7 @@ describe('Backend API integration', () => {
       });
     expect(forbiddenCreate.status).toBe(403);
 
-    const tokenDelete = await client.delete(`/api/platform/tokens/${tokenId}`);
+    const tokenDelete = await client.delete(`/api/app/platform/tokens/${tokenId}`);
     expect(tokenDelete.status).toBe(200);
   });
 

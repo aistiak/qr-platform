@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { adminRouter } from './admin.routes';
+import { appPlatformRouter } from './app-platform.routes';
 import { authRouter } from './auth.routes';
 import { imageRouter } from './image.routes';
 import { platformRouter } from './platform.routes';
@@ -13,6 +14,7 @@ apiRouter.use('/qr', qrRouter);
 apiRouter.use('/images', imageRouter);
 apiRouter.use('/scan', scanRouter);
 apiRouter.use('/admin', adminRouter);
+apiRouter.use('/app/platform', appPlatformRouter);
 apiRouter.use('/platform', platformRouter);
 
 apiRouter.use((_req, res) => {

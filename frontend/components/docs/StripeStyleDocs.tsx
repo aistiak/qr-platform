@@ -19,11 +19,11 @@ const endpoints: Endpoint[] = [
   {
     id: 'create-token',
     method: 'POST',
-    path: '/api/platform/tokens',
+    path: '/api/app/platform/tokens',
     title: 'Create API token',
     auth: 'Session cookie (dashboard login)',
     description: 'Creates a scoped API token. The full token is returned only once.',
-    requestExample: `curl -X POST "http://localhost:3000/api/platform/tokens" \\
+    requestExample: `curl -X POST "http://localhost:3000/api/app/platform/tokens" \\
   -H "Content-Type: application/json" \\
   -H "Cookie: qr_session=<session_cookie>" \\
   --data '{
@@ -44,11 +44,11 @@ const endpoints: Endpoint[] = [
   {
     id: 'list-tokens',
     method: 'GET',
-    path: '/api/platform/tokens',
+    path: '/api/app/platform/tokens',
     title: 'List API tokens',
     auth: 'Session cookie (dashboard login)',
     description: 'Returns all API tokens for the logged-in user.',
-    requestExample: `curl -X GET "http://localhost:3000/api/platform/tokens" \\
+    requestExample: `curl -X GET "http://localhost:3000/api/app/platform/tokens" \\
   -H "Cookie: qr_session=<session_cookie>"`,
     responseExample: `{
   "apiTokens": [],
@@ -181,8 +181,8 @@ export function StripeStyleDocs() {
             <p className="text-xs uppercase tracking-[0.2em] text-accent mb-3">QR Platform</p>
             <h1 className="text-3xl font-semibold mb-3">API Documentation</h1>
             <p className="text-muted leading-relaxed">
-              Use these endpoints to create tokens and manage QRs programmatically. Token creation uses your dashboard
-              session, and QR operations use scoped Bearer tokens.
+              Use these endpoints to create and manage API tokens, then manage QR codes programmatically. Token
+              management requires dashboard session auth, and QR operations use scoped Bearer tokens.
             </p>
           </section>
 
@@ -191,7 +191,7 @@ export function StripeStyleDocs() {
             <div className="space-y-3 text-sm text-muted">
               <p>
                 <span className="font-medium text-foreground">Session auth:</span> use dashboard login cookie
-                (`qr_session`) for `/api/platform/tokens*`.
+                (`qr_session`) for `/api/app/platform/tokens*`.
               </p>
               <p>
                 <span className="font-medium text-foreground">Bearer auth:</span> pass API token for QR endpoints:
@@ -199,6 +199,9 @@ export function StripeStyleDocs() {
               <pre className="rounded-lg bg-black/30 border border-border p-3 overflow-x-auto text-foreground">
 {`Authorization: Bearer qpt_xxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy`}
               </pre>
+              <p>
+                API token users cannot create or list tokens. Issuing and managing tokens is session-only.
+              </p>
             </div>
           </section>
 

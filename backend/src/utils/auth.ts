@@ -76,6 +76,14 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
+export function requireSessionAuth(req: Request, res: Response, next: NextFunction) {
+  if (!req.user || req.authType !== 'session') {
+    res.status(401).json({ error: 'Session authentication required' });
+    return;
+  }
+  next();
+}
+
 function getBearerToken(req: Request) {
   const authorization = req.get('authorization');
   if (!authorization?.startsWith('Bearer ')) {
