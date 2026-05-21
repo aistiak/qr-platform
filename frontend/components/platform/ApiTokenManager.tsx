@@ -23,6 +23,60 @@ type ApiToken = {
 const DEFAULT_SCOPES: ApiTokenScope[] = ['qr:list', 'qr:read'];
 const DEFAULT_EXPIRY_PRESET: ExpiryPreset = '1m';
 
+const NAME_ADJECTIVES = [
+  'Amber',
+  'Brave',
+  'Calm',
+  'Clever',
+  'Crimson',
+  'Daring',
+  'Emerald',
+  'Fuzzy',
+  'Gentle',
+  'Golden',
+  'Happy',
+  'Hidden',
+  'Lucky',
+  'Mellow',
+  'Misty',
+  'Nimble',
+  'Quiet',
+  'Rapid',
+  'Silver',
+  'Sunny',
+];
+
+const NAME_ANIMALS = [
+  'Armadillo',
+  'Badger',
+  'Bear',
+  'Dolphin',
+  'Falcon',
+  'Fox',
+  'Gecko',
+  'Koala',
+  'Lynx',
+  'Monkey',
+  'Otter',
+  'Panda',
+  'Panther',
+  'Penguin',
+  'Rabbit',
+  'Raccoon',
+  'Seal',
+  'Tiger',
+  'Turtle',
+  'Wolf',
+];
+
+function getRandomItem(items: string[]) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function createSuggestedTokenName() {
+  return `${getRandomItem(NAME_ADJECTIVES)} ${getRandomItem(NAME_ANIMALS)}`;
+}
+
 const scopeOptions: { value: ApiTokenScope; label: string; description: string }[] = [
   { value: 'qr:create', label: 'Create QR', description: 'Allows creating QR codes via API' },
   { value: 'qr:read', label: 'Read QR', description: 'Allows reading QR details by ID' },
@@ -48,7 +102,7 @@ export function ApiTokenManager() {
   const [detailsLoadingId, setDetailsLoadingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedScopes, setSelectedScopes] = useState<ApiTokenScope[]>(DEFAULT_SCOPES);
-  const [tokenName, setTokenName] = useState('');
+  const [tokenName, setTokenName] = useState(() => createSuggestedTokenName());
   const [expiryPreset, setExpiryPreset] = useState<ExpiryPreset>(DEFAULT_EXPIRY_PRESET);
   const [newTokenValue, setNewTokenValue] = useState<string | null>(null);
   const [activeTokenId, setActiveTokenId] = useState<string | null>(null);
@@ -135,7 +189,7 @@ export function ApiTokenManager() {
         throw new Error(data.error || 'Failed to create token');
       }
 
-      setTokenName('');
+      setTokenName(createSuggestedTokenName());
       setExpiryPreset(DEFAULT_EXPIRY_PRESET);
       setSelectedScopes(DEFAULT_SCOPES);
       setNewTokenValue(data.token);

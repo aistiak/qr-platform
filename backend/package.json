@@ -6,10 +6,13 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
+    "start:mcp": "MCP_ENABLED=true MCP_HTTP_ENABLED=true node dist/server.js",
+    "start:mcp:stdio": "MCP_ENABLED=true MCP_HTTP_ENABLED=false MCP_STDIO_ENABLED=true node dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

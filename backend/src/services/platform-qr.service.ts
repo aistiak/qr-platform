@@ -88,7 +88,7 @@ export class PlatformQRService {
       qrs: mapped,
       total: mapped.length,
       hasMore,
-      nextCursor: hasMore
+      nextCursor: hasMore && last?.createdAt
         ? encodeCursor({
             createdAt: last.createdAt.toISOString(),
             id: last._id.toString(),

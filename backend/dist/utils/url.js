@@ -1,7 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPublicAppUrl = getPublicAppUrl;
 exports.getBaseUrl = getBaseUrl;
 exports.getScanUrl = getScanUrl;
+function getPublicAppUrl(request) {
+    return (process.env.PUBLIC_APP_URL ||
+        process.env.FRONTEND_URL ||
+        process.env.APP_URL ||
+        (request ? `${request.protocol}://${request.get('host')}` : 'http://localhost:3000'));
+}
 function getBaseUrl(request) {
     if (request) {
         const host = request.get('host');
@@ -13,5 +20,6 @@ function getBaseUrl(request) {
     return process.env.APP_URL || process.env.FRONTEND_URL || 'http://localhost:3000';
 }
 function getScanUrl(qrCodeId, request) {
-    return `${getBaseUrl(request)}/api/scan/${qrCodeId}`;
+    const publicBaseUrl = getPublicAppUrl(request);
+    return `${publicBaseUrl}/c/${qrCodeId}`;
 }

@@ -17,9 +17,63 @@ interface QRCodeFormProps {
   loading?: boolean;
 }
 
+const NAME_ADJECTIVES = [
+  'Amber',
+  'Brave',
+  'Calm',
+  'Clever',
+  'Crimson',
+  'Daring',
+  'Emerald',
+  'Fuzzy',
+  'Gentle',
+  'Golden',
+  'Happy',
+  'Hidden',
+  'Lucky',
+  'Mellow',
+  'Misty',
+  'Nimble',
+  'Quiet',
+  'Rapid',
+  'Silver',
+  'Sunny',
+];
+
+const NAME_ANIMALS = [
+  'Armadillo',
+  'Badger',
+  'Bear',
+  'Dolphin',
+  'Falcon',
+  'Fox',
+  'Gecko',
+  'Koala',
+  'Lynx',
+  'Monkey',
+  'Otter',
+  'Panda',
+  'Panther',
+  'Penguin',
+  'Rabbit',
+  'Raccoon',
+  'Seal',
+  'Tiger',
+  'Turtle',
+  'Wolf',
+];
+
+function getRandomItem(items: string[]) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function createSuggestedQrName() {
+  return `${getRandomItem(NAME_ADJECTIVES)} ${getRandomItem(NAME_ANIMALS)}`;
+}
+
 export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
   const [targetType, setTargetType] = useState<'url' | 'image'>('url');
-  const [customName, setCustomName] = useState('');
+  const [customName, setCustomName] = useState(() => createSuggestedQrName());
   const [targetUrl, setTargetUrl] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -116,7 +170,7 @@ export function QRCodeForm({ onSubmit, loading = false }: QRCodeFormProps) {
         value={customName}
         onChange={(e) => setCustomName(e.target.value)}
         maxLength={100}
-        placeholder="My QR Code"
+        placeholder="Your QR name"
       />
 
       <div>

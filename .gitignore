@@ -4,6 +4,7 @@ node_modules/
 .pnp.js
 .next
 /frontend/.next/
+/backend/dist/
 # Testing
 /coverage
 .nyc_output

@@ -33,6 +33,12 @@ services:
       - PORT=4000
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
       - MONGODB_URI=${MONGODB_URI:-mongodb://admin:adminpassword@mongodb:27017/qr-platform?authSource=admin}
+      - MCP_ENABLED=true
+      - MCP_HTTP_ENABLED=true
+      - MCP_HTTP_PATH=/mcp
+      - MCP_STDIO_ENABLED=false
+      # Optional default token for MCP tools if client does not pass apiToken
+      # - MCP_API_TOKEN=${MCP_API_TOKEN}
     depends_on:
       mongodb:
         condition: service_healthy

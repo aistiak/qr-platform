@@ -215,14 +215,14 @@ export function QRCodeCard({
 
   return (
     <>
-      <Card className="hover:border-white/20 transition-colors">
-        <div className="flex flex-col md:flex-row gap-4">
+      <Card className="hover:border-white/20 transition-colors !p-5">
+        <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-shrink-0">
-            <QRCodeViewer data={scanUrl} size={150} />
+            <QRCodeViewer data={scanUrl} size={120} />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2 text-foreground">{customName}</h3>
-            <div className="space-y-1 text-sm text-muted">
+            <h3 className="text-base font-semibold mb-1.5 text-foreground">{customName}</h3>
+            <div className="space-y-0.5 text-xs text-muted">
               <p>
                 <span className="font-medium text-foreground">Type:</span> {targetType === 'url' ? 'URL' : 'Image'}
               </p>
@@ -234,7 +234,7 @@ export function QRCodeCard({
               <p>
                 <span className="font-medium text-foreground">Status:</span>{' '}
                 <span
-                  className={`px-2 py-1 rounded text-xs ${
+                  className={`px-1.5 py-0.5 rounded text-[11px] ${
                     status === 'active'
                       ? 'bg-green-900/50 text-green-300'
                       : status === 'paused'
@@ -253,14 +253,14 @@ export function QRCodeCard({
                 {new Date(createdAt).toLocaleDateString()}
               </p>
             </div>
-            <div className="mt-4 flex gap-2 flex-wrap">
+            <div className="mt-3 flex gap-1.5 flex-wrap">
               <Link href={`/dashboard/qr/${id}`}>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="sm" className="!px-2.5 !py-1 !min-h-[30px] !text-xs">
                   View Details
                 </Button>
               </Link>
               <Link href={`/dashboard/qr/${id}/analytics`}>
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary" size="sm" className="!px-2.5 !py-1 !min-h-[30px] !text-xs">
                   Analytics
                 </Button>
               </Link>
@@ -270,6 +270,7 @@ export function QRCodeCard({
                     <Button
                       variant="secondary"
                       size="sm"
+                      className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
                       onClick={() => setShowDownloadMenu(!showDownloadMenu)}
                       disabled={loading}
                     >
@@ -303,6 +304,7 @@ export function QRCodeCard({
                   <Button
                     variant="secondary"
                     size="sm"
+                    className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
                     onClick={() => handleShare()}
                     disabled={loading}
                   >
@@ -311,6 +313,7 @@ export function QRCodeCard({
                   <Button
                     variant="secondary"
                     size="sm"
+                    className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
                     onClick={handlePause}
                     disabled={loading}
                   >
@@ -319,6 +322,7 @@ export function QRCodeCard({
                   <Button
                     variant="secondary"
                     size="sm"
+                    className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
                     onClick={handleArchive}
                     disabled={loading || status === 'paused'}
                   >
@@ -327,6 +331,7 @@ export function QRCodeCard({
                   <Button
                     variant="danger"
                     size="sm"
+                    className="!px-2.5 !py-1 !min-h-[30px] !text-xs"
                     onClick={() => setShowDeleteModal(true)}
                     disabled={loading}
                   >
