@@ -27,17 +27,6 @@ app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'ok', service: 'backend' });
 });
 
-app.get('/test/bugsink', async (_req, res, next) => {
-  try {
-    const error = new Error('Bugsink backend test error');
-    const eventId = Sentry.captureException(error);
-    await Sentry.flush(2000);
-    res.status(500).json({ ok: true, eventId, message: 'Test error sent to Bugsink' });
-  } catch (error) {
-    next(error);
-  }
-});
-
 app.use('/api', apiRouter);
 
 async function bootstrap() {
