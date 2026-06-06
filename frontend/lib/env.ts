@@ -57,6 +57,7 @@ const clientEnvSchema = z.object({
     emptyToUndefined,
     z.string().min(1).optional(),
   ),
+  NEXT_PUBLIC_BUGSINK_DSN: z.preprocess(emptyToUndefined, z.string().url().optional()),
 });
 
 function formatValidationErrors(error: z.ZodError): string {
@@ -98,6 +99,7 @@ function parseEnv() {
         process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000',
       NEXT_PUBLIC_UMAMI_HOST: process.env.NEXT_PUBLIC_UMAMI_HOST,
       NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
+      NEXT_PUBLIC_BUGSINK_DSN: process.env.NEXT_PUBLIC_BUGSINK_DSN,
       isProduction: process.env.NODE_ENV === 'production',
       isDevelopment: process.env.NODE_ENV === 'development',
       loggingEnabled:

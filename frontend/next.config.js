@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const fs = require('fs');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   // Enable standalone output for Docker
@@ -51,4 +52,11 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withSentryConfig(nextConfig, {
+  org: 'bugsink',
+  project: 'qr-platform',
+  silent: true,
+  sourcemaps: {
+    disable: true,
+  },
+});

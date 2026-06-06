@@ -12,6 +12,7 @@
     "create-indexes": "tsx scripts/create-indexes.ts"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.56.0",
     "@tanstack/react-query": "^5.56.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
