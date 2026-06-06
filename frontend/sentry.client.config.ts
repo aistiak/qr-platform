@@ -1,4 +1,4 @@
 import * as Sentry from '@sentry/nextjs';
-import { getBugsinkInitOptions } from './lib/bugsink';
+import { getBugsinkClientInitOptions } from './lib/bugsink';
 
-Sentry.init(getBugsinkInitOptions());
+Sentry.init(getBugsinkClientInitOptions());

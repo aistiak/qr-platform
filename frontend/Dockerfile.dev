@@ -1,16 +1,15 @@
-FROM node:20-alpine
+FROM node:alpine
 
 WORKDIR /app
 
-# Install dependencies
-COPY package.json package-lock.json* ./
-RUN npx pnpm install
+RUN apk add --no-cache libc6-compat \
+  && npm install -g pnpm@10.12.4
 
-# Copy application code
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 
-# Expose port
 EXPOSE 3000
 
-# Start development server
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]

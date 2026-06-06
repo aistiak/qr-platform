@@ -1,13 +1,14 @@
-FROM node:20-alpine AS base
+FROM node:alpine AS base
+RUN apk add --no-cache libc6-compat \
+  && npm install -g pnpm@10.12.4
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files and lockfile for reproducible installs (Tailwind/PostCSS in devDependencies)
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -16,7 +17,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build Next.js application (PostCSS/Tailwind process globals.css at build time)
-RUN corepack enable pnpm && pnpm run build
+RUN pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

@@ -1,6 +1,8 @@
 export const DEFAULT_BUGSINK_DSN =
   'http://e7daceb8d378431b9e76f3c5abe34758@localhost:8000/1';
 
+export const BUGSINK_TUNNEL_PATH = '/monitoring';
+
 export function getBugsinkDsn(): string | undefined {
   const configured = process.env.NEXT_PUBLIC_BUGSINK_DSN;
   if (configured === '') {
@@ -8,6 +10,13 @@ export function getBugsinkDsn(): string | undefined {
   }
 
   return configured ?? DEFAULT_BUGSINK_DSN;
+}
+
+export function getBugsinkEnvelopeUrl(dsn: string): string {
+  const parsed = new URL(dsn);
+  const projectId = parsed.pathname.replace(/^\//, '');
+
+  return `${parsed.protocol}//${parsed.host}/api/${projectId}/envelope/`;
 }
 
 export function getBugsinkInitOptions() {
@@ -18,5 +27,13 @@ export function getBugsinkInitOptions() {
     enabled: Boolean(dsn),
     environment: process.env.NODE_ENV,
     tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.1,
+  };
+}
+
+export function getBugsinkClientInitOptions() {
+  return {
+    ...getBugsinkInitOptions(),
+    tunnel: BUGSINK_TUNNEL_PATH,
+    debug: process.env.NODE_ENV === 'development',
   };
 }

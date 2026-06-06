@@ -63,6 +63,7 @@ services:
       - NODE_ENV=development
       - BACKEND_INTERNAL_URL=http://backend:4000
       - NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+      - NEXT_PUBLIC_BUGSINK_DSN=${NEXT_PUBLIC_BUGSINK_DSN:-http://e7daceb8d378431b9e76f3c5abe34758@bug.krftlabs.com/1}
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -71,7 +72,7 @@ services:
       - backend
     networks:
       - qr-platform-network
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   mongodb_data:

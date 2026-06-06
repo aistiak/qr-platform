@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const fs = require('fs');
-const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
   // Enable standalone output for Docker
@@ -34,7 +33,9 @@ const nextConfig = {
   
   // Experimental features
   experimental: {
-    // Enable server actions if needed
+    outputFileTracingIncludes: {
+      '/': ['./node_modules/@sentry/**/*'],
+    },
   },
   
   // ESLint configuration
@@ -52,11 +53,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withSentryConfig(nextConfig, {
-  org: 'bugsink',
-  project: 'qr-platform',
-  silent: true,
-  sourcemaps: {
-    disable: true,
-  },
-});
+module.exports = nextConfig;
