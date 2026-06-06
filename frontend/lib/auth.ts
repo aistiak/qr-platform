@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
+import { env } from '@/lib/env';
 
 const SESSION_COOKIE_NAME = 'qr_session';
 
@@ -22,9 +23,7 @@ export async function auth(): Promise<Session> {
   }
 
   try {
-    const secret =
-      process.env.SESSION_SECRET || process.env.NEXTAUTH_SECRET || 'change-this-secret';
-    const decoded = jwt.verify(token, secret) as { user?: SessionUser };
+    const decoded = jwt.verify(token, env.sessionSecret) as { user?: SessionUser };
     if (!decoded.user) {
       return null;
     }

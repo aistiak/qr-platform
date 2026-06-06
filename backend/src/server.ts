@@ -1,16 +1,14 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
+import { env } from './env';
 import { registerMcpHttpRoutes, startMcpStdioServer } from './mcp/server';
 import { apiRouter } from './routes';
 import { attachSessionUser } from './utils/auth';
 
-dotenv.config();
-
 export const app = express();
-const port = Number(process.env.PORT || 4000);
-const frontendOrigin = process.env.FRONTEND_URL || 'http://localhost:3000';
+const port = env.PORT;
+const frontendOrigin = env.FRONTEND_URL;
 
 app.use(cors({ origin: frontendOrigin, credentials: true }));
 app.use(express.json());
@@ -24,22 +22,18 @@ app.get('/health', (_req, res) => {
 app.use('/api', apiRouter);
 
 async function bootstrap() {
-  const mcpEnabled = process.env.MCP_ENABLED === 'true' || process.env.MCP_ONLY === 'true';
-  const mcpHttpEnabled = mcpEnabled && process.env.MCP_HTTP_ENABLED !== 'false';
-  const mcpStdioEnabled = mcpEnabled && process.env.MCP_STDIO_ENABLED === 'true';
-
-  if (mcpHttpEnabled) {
-    const mcpPath = process.env.MCP_HTTP_PATH || '/mcp';
-    registerMcpHttpRoutes(app, mcpPath);
+  if (env.mcpHttpEnabled) {
+    registerMcpHttpRoutes(app, env.mcpHttpPath);
   }
 
-  if (mcpStdioEnabled) {
+  if (env.mcpStdioEnabled) {
     await startMcpStdioServer();
   }
 
   app.listen(port, () => {
-    const mcpPath = process.env.MCP_HTTP_PATH || '/mcp';
-    const mcpUrl = mcpHttpEnabled ? `, MCP URL: http://localhost:${port}${mcpPath}` : '';
+    const mcpUrl = env.mcpHttpEnabled
+      ? `, MCP URL: http://localhost:${port}${env.mcpHttpPath}`
+      : '';
     console.log(`Backend listening on port ${port}${mcpUrl}`);
   });
 }
