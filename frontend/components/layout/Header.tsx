@@ -1,0 +1,143 @@
+'use client';
+
+import Link from 'next/link';
+import { SignOutButton } from '@/components/auth/SignOutButton';
+import { Button } from '@/components/ui/Button';
+import { Home, KeyRound, Menu } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+export function Header() {
+  const [session, setSession] = useState<{ user?: { role?: string } } | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const response = await fetch('/api/auth/session', { credentials: 'include' });
+        if (!response.ok) {
+          setSession(null);
+          return;
+        }
+        const data = await response.json();
+        setSession(data);
+      } catch {
+        setSession(null);
+      }
+    };
+
+    void loadSession();
+  }, []);
+
+  return (
+    <header className="bg-background border-b border-border sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 lg:h-18">
+          <Link
+            href="/"
+            className="text-xl font-bold text-foreground hover:opacity-90 transition-opacity tracking-tight"
+          >
+            QR Host
+          </Link>
+          <nav className="hidden sm:flex items-center gap-6">
+            {session ? (
+              <>
+                <Link href="/docs">
+                  <Button variant="outline" size="sm">
+                    Docs
+                  </Button>
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="text-muted hover:text-foreground transition-colors p-2 rounded-lg hover:bg-white/5"
+                  title="Dashboard"
+                >
+                  <Home className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/dashboard/api-management"
+                  className="text-muted hover:text-foreground transition-colors p-2 rounded-lg hover:bg-white/5"
+                  title="API Management"
+                >
+                  <KeyRound className="w-5 h-5" />
+                </Link>
+                {session.user?.role === 'admin' && (
+                  <Link href="/admin">
+                    <Button variant="outline" size="sm">
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+                <SignOutButton />
+              </>
+            ) : (
+              <>
+                <Link href="/docs">
+                  <Button variant="outline" size="sm">
+                    Docs
+                  </Button>
+                </Link>
+                <Link href="/auth/signin">
+                  <Button variant="secondary" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button size="sm">
+                    Get started
+                  </Button>
+                </Link>
+              </>
+            )}
+          </nav>
+          <button
+            type="button"
+            className="sm:hidden p-2 text-foreground rounded-lg hover:bg-white/5"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+        {mobileOpen && (
+          <div className="sm:hidden py-4 border-t border-border flex flex-col gap-2">
+            {session ? (
+              <>
+                <Link href="/docs" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Docs
+                </Link>
+                <Link href="/dashboard" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Dashboard
+                </Link>
+                <Link
+                  href="/dashboard/api-management"
+                  className="py-2 text-foreground"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  API Management
+                </Link>
+                {session.user?.role === 'admin' && (
+                  <Link href="/admin" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                    Admin
+                  </Link>
+                )}
+                <SignOutButton />
+              </>
+            ) : (
+              <>
+                <Link href="/docs" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Docs
+                </Link>
+                <Link href="/auth/signin" className="py-2 text-foreground" onClick={() => setMobileOpen(false)}>
+                  Sign In
+                </Link>
+                <Link href="/auth/signup" className="py-2" onClick={() => setMobileOpen(false)}>
+                  <Button size="sm" className="w-full">Get started</Button>
+                </Link>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
