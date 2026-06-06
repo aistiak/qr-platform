@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+import { UmamiAnalytics } from '@/components/analytics/UmamiAnalytics';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans flex flex-col min-h-screen bg-background text-foreground antialiased">
+        <UmamiAnalytics />
         <Providers>
           <Header />
           <main className="flex-1">{children}</main>

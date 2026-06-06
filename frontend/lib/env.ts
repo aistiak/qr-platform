@@ -52,6 +52,11 @@ const serverEnvSchema = z
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url(),
   NEXT_PUBLIC_BACKEND_URL: z.string().url(),
+  NEXT_PUBLIC_UMAMI_HOST: z.preprocess(emptyToUndefined, z.string().url().optional()),
+  NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.preprocess(
+    emptyToUndefined,
+    z.string().min(1).optional(),
+  ),
 });
 
 function formatValidationErrors(error: z.ZodError): string {
@@ -91,6 +96,8 @@ function parseEnv() {
         process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
       NEXT_PUBLIC_BACKEND_URL:
         process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:4000',
+      NEXT_PUBLIC_UMAMI_HOST: process.env.NEXT_PUBLIC_UMAMI_HOST,
+      NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
       isProduction: process.env.NODE_ENV === 'production',
       isDevelopment: process.env.NODE_ENV === 'development',
       loggingEnabled:
