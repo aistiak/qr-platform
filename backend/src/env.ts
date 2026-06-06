@@ -37,6 +37,7 @@ const envSchema = z
     MCP_STDIO_ENABLED: z.enum(['true', 'false']).optional(),
     MCP_HTTP_PATH: z.preprocess(emptyToUndefined, z.string().startsWith('/').optional()),
     MCP_API_TOKEN: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
+    BUGSINK_DSN: z.preprocess(emptyToUndefined, z.string().url().optional()),
   })
   .superRefine((data, ctx) => {
     const sessionSecret = data.SESSION_SECRET ?? data.NEXTAUTH_SECRET;

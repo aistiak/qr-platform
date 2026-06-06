@@ -43,11 +43,15 @@ const UserSchema = new mongoose_1.Schema({
         trim: true,
         match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
     },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String },
+    authProvider: { type: String, enum: ['credentials', 'google'], default: 'credentials' },
+    googleId: { type: String },
+    image: { type: String },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     qrCodeLimit: { type: Number, default: 20, min: 1 },
 }, { timestamps: true });
 UserSchema.index({ email: 1 }, { unique: true });
 UserSchema.index({ role: 1 });
+UserSchema.index({ googleId: 1 }, { unique: true, sparse: true });
 const User = mongoose_1.default.models.User || mongoose_1.default.model('User', UserSchema);
 exports.default = User;

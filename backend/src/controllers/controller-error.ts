@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import type { Response } from 'express';
 import { isHttpError } from '../core/http-error';
 
@@ -10,5 +11,6 @@ export function handleControllerError(res: Response, error: unknown, fallbackMes
     return res.status(404).json({ error: fallbackMessage });
   }
 
+  Sentry.captureException(error);
   return res.status(500).json({ error: fallbackMessage });
 }

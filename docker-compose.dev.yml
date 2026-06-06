@@ -39,6 +39,7 @@ services:
       - MCP_HTTP_ENABLED=true
       - MCP_HTTP_PATH=/mcp
       - MCP_STDIO_ENABLED=false
+      - BUGSINK_DSN=${BUGSINK_DSN:-https://87f465a1cf7d4c189f4babe0216f46cd@bug.krftlabs.com/2}
       # Optional default token for MCP tools if client does not pass apiToken
       # - MCP_API_TOKEN=${MCP_API_TOKEN}
     volumes:

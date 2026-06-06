@@ -1,7 +1,11 @@
+import './instrument';
+
+import * as Sentry from '@sentry/node';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import { env } from './env';
+import { setBugsinkUser } from './lib/bugsink-user';
 import { registerMcpHttpRoutes, startMcpStdioServer } from './mcp/server';
 import { apiRouter } from './routes';
 import { attachSessionUser } from './utils/auth';
@@ -14,9 +18,24 @@ app.use(cors({ origin: frontendOrigin, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(attachSessionUser);
+app.use((req, _res, next) => {
+  setBugsinkUser(req.user ?? null);
+  next();
+});
 
 app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'ok', service: 'backend' });
+});
+
+app.get('/test/bugsink', async (_req, res, next) => {
+  try {
+    const error = new Error('Bugsink backend test error');
+    const eventId = Sentry.captureException(error);
+    await Sentry.flush(2000);
+    res.status(500).json({ ok: true, eventId, message: 'Test error sent to Bugsink' });
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.use('/api', apiRouter);
@@ -30,6 +49,8 @@ async function bootstrap() {
     await startMcpStdioServer();
   }
 
+  Sentry.setupExpressErrorHandler(app);
+
   app.listen(port, () => {
     const mcpUrl = env.mcpHttpEnabled
       ? `, MCP URL: http://localhost:${port}${env.mcpHttpPath}`
@@ -39,8 +60,10 @@ async function bootstrap() {
 }
 
 if (require.main === module) {
-  bootstrap().catch((error) => {
+  bootstrap().catch(async (error) => {
     console.error('Failed to bootstrap backend:', error);
+    Sentry.captureException(error);
+    await Sentry.flush(2000);
     process.exit(1);
   });
 }
